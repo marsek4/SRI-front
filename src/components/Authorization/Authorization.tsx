@@ -1,13 +1,71 @@
 import styles from "./Authorization.module.css";
 import { useState } from "react";
+import { MoveUp } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/authStore";
+import {
+  type LoginData,
+  type RegisterData,
+  // type UserData,
+  type FullUserData,
+} from "@/types/types";
+import { useNavigate } from "react-router-dom";
+
+type AuthMode = "authorization" | "registration";
 
 const Authorization = () => {
+  const navigate = useNavigate();
+
+  // const qc = useQueryClient();
+
+  const setAuth = useAuthStore((s) => s.setAuth);
+
+  const mutation = useMutation({
+    mutationFn: async (data: LoginData | RegisterData) => {
+      const url =
+        formMode === "authorization"
+          ? "/api/v1/auth/login"
+          : "api/v1/auth/register";
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const result: FullUserData = await res.json();
+
+      return result;
+    },
+    onSuccess: (data) => {
+      // qc.invalidateQueries({ queryKey: ["auth"] });
+      setAuth({
+        accessToken: data.accessToken,
+        expiresAt: data.expiresAt as unknown as string,
+        user: data.user,
+      });
+      navigate("/mainpage");
+    },
+    onError: (error) => {
+      console.error("Ошибка запроса: ", error);
+    },
+  });
+
   const [username, setUsername] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  // const [error, setError] = useState<string>("");
+  const [formMode, setFormMode] = useState<AuthMode>("authorization");
 
   const handleSubmit = () => {
-    console.log("qwe");
+    if (formMode === "authorization") {
+      mutation.mutate({ username, password });
+    } else {
+      mutation.mutate({ username, displayName, password });
+    }
   };
 
   return (
@@ -38,7 +96,23 @@ const Authorization = () => {
         </div>
       </section>
       <section className={styles.rightSection}>
-        <h2 className={styles.rightSectionHeader}>Sign in</h2>
+        <div className={styles.rightSectionMode}>
+          <span
+            className={`${styles.signInText} ${formMode === "authorization" ? styles.signInTextActive : ""}`}
+            onClick={() => setFormMode("authorization")}
+          >
+            Sign in
+          </span>
+          <span
+            className={`${styles.signUpText} ${formMode === "registration" ? styles.signUpTextActive : ""}`}
+            onClick={() => setFormMode("registration")}
+          >
+            Sign up
+          </span>
+        </div>
+        <h2 className={styles.rightSectionHeader}>
+          {formMode === "authorization" ? "Login portal" : "New account"}
+        </h2>
         <div className={styles.rightSectionForm}>
           <label className={styles.rightSectionInputContainer}>
             User name{" "}
@@ -49,6 +123,17 @@ const Authorization = () => {
               className={styles.rightSectionInput}
             />
           </label>
+          {formMode === "registration" && (
+            <label className={styles.rightSectionInputContainer}>
+              Display name{" "}
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className={styles.rightSectionInput}
+              />
+            </label>
+          )}
           <label className={styles.rightSectionInputContainer}>
             Password{" "}
             <input
@@ -63,9 +148,10 @@ const Authorization = () => {
             onClick={handleSubmit}
             className={styles.rightSectionButton}
           >
-            <p className={styles.buttonText}>Sign in</p>
-            {/* <img></img> */}
-            <div></div>
+            <p className={styles.buttonText}>
+              {formMode === "authorization" ? "Sign in" : "Sign up"}
+            </p>
+            <MoveUp className={styles.buttonArrow} />
           </button>
         </div>
       </section>
@@ -74,31 +160,3 @@ const Authorization = () => {
 };
 
 export default Authorization;
-
-//   <form onSubmit={handleSubmit} className={styles.authForm}>
-//     <h1>Authorization</h1>
-//     <div className={styles.inputContainer}>
-//       <p>login</p>
-//       <input
-//         type="text"
-//         placeholder="login"
-//         value={login}
-//         onChange={(e) => setLogin(e.target.value)}
-//         className={styles.authInput}
-//       />
-//     </div>
-//     <div className={styles.inputContainer}>
-//       <p>password</p>
-//       <input
-//         type="password"
-//         placeholder="********"
-//         value={password}
-//         onChange={(e) => setPassword(e.target.value)}
-//         className={styles.authInput}
-//       />
-//     </div>
-//     <button type="submit" className={styles.authButton}>
-//       Sign in
-//     </button>
-//     {/* <a></a> */}
-//   </form>
