@@ -1,35 +1,41 @@
-// src/store/authStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { type UserData } from "@/types/types";
+import { type UserData, type FullUserData } from "@/types/types";
 
 type AuthState = {
   accessToken: string | null;
   expiresAt: string | null;
   user: UserData | null;
-  setAuth: (data: {
-    accessToken: string;
-    expiresAt: string;
-    user: UserData;
-  }) => void;
+  isAuthenticated: () => boolean;
+  setAuth: (data: FullUserData) => void;
   logout: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       accessToken: null,
       expiresAt: null,
       user: null,
 
-      setAuth: ({ accessToken, expiresAt, user }) =>
-        set({ accessToken, expiresAt, user }),
+      isAuthenticated: () => {
+        const { accessToken, expiresAt } = get();
+        if (!accessToken || !expiresAt) return false;
+        return new Date(expiresAt) > new Date();
+      },
 
-      logout: () => set({ accessToken: null, expiresAt: null, user: null }),
+      setAuth: (data) => {
+        set({
+          accessToken: data.accessToken,
+          expiresAt: data.expiresAt,
+          user: data.user,
+        });
+      },
+
+      logout: () => {
+        set({ accessToken: null, expiresAt: null, user: null });
+      },
     }),
-    {
-      name: "auth", // ключ в localStorage
-      // можно хранить только токен, а юзера подтягивать через /me
-    },
+    { name: "auth" },
   ),
 );

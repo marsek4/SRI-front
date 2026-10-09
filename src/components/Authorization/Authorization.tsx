@@ -44,10 +44,10 @@ const Authorization = () => {
       // qc.invalidateQueries({ queryKey: ["auth"] });
       setAuth({
         accessToken: data.accessToken,
-        expiresAt: data.expiresAt as unknown as string,
+        expiresAt: data.expiresAt,
         user: data.user,
       });
-      navigate("/mainpage");
+      navigate("/overview");
     },
     onError: (error) => {
       console.error("Ошибка запроса: ", error);

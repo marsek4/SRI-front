@@ -1,0 +1,149 @@
+.headerContainer {
+  display: flex;
+  /* max-height: 60px; */
+  max-width: 100%;
+  align-items: center;
+  padding: 0px 50px;
+  box-sizing: border-box;
+  /* background-color: aqua; */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: white;
+  width: 100%;
+  height: fit-content;
+  margin: 8px 0px;
+}
+
+.headerLogo {
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  padding: 3px 4px;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-end;
+  background-color: red;
+  font-family: "Golos Text", system-ui, sans-serif;
+}
+
+.headerTextContainer {
+  /* background-color: yellow; */
+}
+
+.headerText {
+  font-size: 12px;
+  color: rgb(32, 30, 29);
+  font-family: "Golos Text", system-ui, sans-serif;
+}
+
+.headerSubText {
+  font-size: 12px;
+  color: rgb(96, 93, 93);
+  font-family: "Golos Text", system-ui, sans-serif;
+}
+
+.userHeaderPart {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notificationButton {
+  display: flex;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px;
+  border: 1px solid rgba(32, 30, 29, 0.45);
+  aspect-ratio: 1/1;
+  /* height: 40px; */
+  flex-shrink: 0;
+}
+
+.userSymbols {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 40px; */
+  height: 40px;
+  aspect-ratio: 1 / 1;
+  background-color: rgb(32, 30, 29);
+  color: #fff;
+  font-size: 13px;
+  font-family: "Golos Text", sans-serif, system-ui;
+  font-weight: 700;
+}
+
+.profileTextBlock {
+  width: fit-content;
+  font-family: "Golos Text", sans-serif, system-ui;
+  white-space: nowrap;
+}
+
+.userNameText {
+  color: rgb(32, 30, 29);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.userRole,
+.userLogin {
+  font-size: 12px;
+  color: rgb(96, 93, 93);
+}
+
+.userLogin {
+  font-family: "IBMPlexMono";
+  font-weight: 400;
+}
+
+.logoutButton {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0px 8px;
+  border: 1px solid rgba(32, 30, 29, 0.45);
+}
+
+.logoutButtonText {
+  color: rgb(32, 30, 29);
+  font-family: "Golos Text", sans-serif, system-ui;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.navbar {
+  width: 100%;
+  height: fit-content;
+  border-bottom: 2px solid rgb(32, 30, 29);
+  padding: 12px 50px;
+}
+
+.navbarItem {
+  font-family: "Golos Text", sans-serif, system-ui;
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 20px;
+  color: rgb(96, 93, 93);
+  cursor: pointer;
+  transition: border-bottom-color 0.3s ease;
+  padding: 13px 4px;
+}
+
+.navbarItem:hover {
+  background-color: rgba(96, 93, 93, 0.45);
+}
+
+.navbarItemActive {
+  border-bottom: 2px solid red;
+  /* padding: 12px 0px; */
+  color: rgb(32, 30, 29);
+}
