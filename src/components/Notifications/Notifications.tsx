@@ -1,20 +1,102 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Notifications.module.css";
 import { MoveUp } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/authStore";
+import { useSubscriptions } from "@/hooks/useSubscriptions";
+import { useNotifications } from "@/hooks/useNotifications";
 
 type NotificationType = "all" | "unread";
 
+type Reminder = {
+  title: string;
+  body: string;
+  remindAt?: string;
+};
+
 const Notifications = () => {
-  // const
+  const qc = useQueryClient();
+
+  const {
+    subscriptions,
+    isLoading: isSubscriptionsLoading,
+    isError: isSubscriptionsError,
+    error: errorSubscriptions,
+  } = useSubscriptions();
+  const {
+    notifications,
+    isLoading: isNotificationsLoading,
+    isError: isNotificationsError,
+    error: errorNotifications,
+  } = useNotifications();
 
   const [notificationFilter, setNotificationFilter] =
     useState<NotificationType>("all");
   const [title, setTitle] = useState<string>("");
-  const [notificationText, setNotificationText] = useState<string>("");
-  const [date, setDate] = useState<string>();
+  const [body, setBody] = useState<string>("");
+  const [remindAt, setRemindAt] = useState<string>();
 
-  const handleSubmit = () => {
-    console.log(123);
+  const mutationReminders = useMutation({
+    mutationFn: async (data: Reminder) => {
+      const token = useAuthStore.getState().accessToken;
+      const res = await fetch("/api/v1/reminders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        console.log("Ошибка при создании напоминания");
+        return;
+      }
+
+      console.log("Успешное создание напоминания");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  // const mutationSubscription = async () => {
+  //   mutationFn: async () => {};
+  // };
+
+  const mutationNotificationsRead = useMutation({
+    mutationFn: async (id: string) => {
+      const token = useAuthStore.getState().accessToken;
+      const res = await fetch(`/api/v1/notifications/${id}:read`, {
+        method: "POST",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+      if (!res.ok) {
+        console.log("Ошибка при создании напоминания");
+        return;
+      }
+
+      console.log("Успешное создание напоминания");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  const createReminder = () => {
+    if (!remindAt) return;
+
+    mutationReminders.mutate({
+      title,
+      body,
+      remindAt: new Date(remindAt).toISOString(),
+    });
+  };
+
+  const handleNotificationRead = (id: string) => {
+    mutationNotificationsRead.mutate(id);
   };
 
   return (
@@ -30,19 +112,37 @@ const Notifications = () => {
         <section className={styles.currentNotifications}>
           <div className={styles.currentNotificationsHeader}>
             <span
-              className={styles.notificationFilterOption}
+              className={`${styles.notificationFilterOption} ${notificationFilter === "all" ? styles.activeFilterOption : ""}`}
               onClick={() => setNotificationFilter("all")}
             >
               All
             </span>
             <span
-              className={styles.notificationFilterOption}
+              className={`${styles.notificationFilterOption} ${notificationFilter === "unread" ? styles.activeFilterOption : ""}`}
               onClick={() => setNotificationFilter("unread")}
             >
               Unread
             </span>
           </div>
-          <div> DIV FOR NOTIFICATIONS</div>
+          {notificationFilter === "all" &&
+            notifications.map((item) => (
+              <div key={item.id}>
+                {item.body}{" "}
+                {item.read === false && (
+                  <button
+                    type="button"
+                    onClick={() => handleNotificationRead(item.id)}
+                  >
+                    Mark as 'read'
+                  </button>
+                )}
+              </div>
+            ))}
+          {notificationFilter === "unread" &&
+            notifications.map(
+              (item) =>
+                item.read === false && <div key={item.id}>{item.body}</div>,
+            )}
         </section>
         <section className={styles.newNotifications}>
           <h2 className={styles.newNotificationsHeader}>New reminder</h2>
@@ -61,24 +161,23 @@ const Notifications = () => {
           <label className={styles.inputContainer}>
             Text{" "}
             <textarea
-              //   type="text"
-              value={notificationText}
-              onChange={(e) => setNotificationText(e.target.value)}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
               className={styles.textareaField}
             />
           </label>
           <label className={styles.inputContainer}>
             When to remind{" "}
             <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              type="datetime-local"
+              value={remindAt}
+              onChange={(e) => setRemindAt(e.target.value)}
               className={styles.inputField}
             />
           </label>
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={createReminder}
             className={styles.submitButton}
           >
             <p className={styles.buttonText}>Create reminder</p>
@@ -92,13 +191,20 @@ const Notifications = () => {
                 Notifications regarding bookings and announcements for selected
                 laboratories
               </p>
+              {subscriptions && subscriptions.length > 0 ? (
+                subscriptions.map((item) => (
+                  <div key={item.id}>{item.topic}</div>
+                ))
+              ) : (
+                <p className={styles.noSubscriptions}>No subscriptions yet</p>
+              )}
             </div>
             {}
             <label className={styles.selectContainer}>
               Add subscription{" "}
-              <div>
+              <div className={styles.selectContainerButtons}>
                 <select className={styles.selectField}>
-                  <option>Choose the lab</option>
+                  <option>Choose a lab</option>
                 </select>
                 <button className={styles.subscribeButton}>Subscribe</button>
               </div>
@@ -111,32 +217,3 @@ const Notifications = () => {
 };
 
 export default Notifications;
-
-{
-  /* <div className={styles.notificationsContainerHeader}>
-        <h1>Notifications</h1>
-        <p>
-          System messages, booking and experiment events, personal reminders.
-        </p>
-      </div>
-      <div className={styles.notificationPanelContainer}>
-        <section className={styles.currentNotifications}>
-          <div className={styles.currentNotificationsHeader}>
-            <span
-              className={styles.notificationFilterOption}
-              onClick={() => setNotificationFilter("all")}
-            >
-              All
-            </span>
-            <span
-              className={styles.notificationFilterOption}
-              onClick={() => setNotificationFilter("unread")}
-            >
-              Unread
-            </span>
-          </div>
-          <div></div>
-        </section>
-        <section></section>
-      </div> */
-}

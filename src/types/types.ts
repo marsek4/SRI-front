@@ -22,3 +22,25 @@ export type FullUserData = {
   expiresAt: string;
   user: UserData;
 };
+
+export type Subscription = {
+  id: string;
+  topic: string;
+  createdAt: string;
+};
+
+export type Notification = {
+  id: string;
+  kind: string;
+  title: string;
+  body: string;
+  topic: string;
+  read: boolean;
+  createdAt: string;
+  remindAt: string;
+};
+
+export type Notifications = {
+  notifications: Notification[];
+  unreadCount: number;
+};

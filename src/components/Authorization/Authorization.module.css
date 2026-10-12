@@ -23,7 +23,6 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: white;
   width: 100%;
   height: fit-content;
 }
@@ -109,7 +108,7 @@
   font-family: "Golos Text", system-ui, sans-serif;
   font-size: 14px;
   border-bottom: 2px solid transparent;
-  padding-bottom: 10px;
+  padding-bottom: 11px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -120,12 +119,11 @@
 }
 
 .signUpText {
-  /* color: rgb(68, 65, 65); */
   color: rgb(96, 93, 93);
   font-family: "Golos Text", system-ui, sans-serif;
   font-size: 14px;
   border-bottom: 2px solid transparent;
-  padding-bottom: 10px;
+  padding-bottom: 11px;
   font-weight: 700;
   margin-left: 20px;
   cursor: pointer;

@@ -10,10 +10,31 @@
 
 .currentNotifications {
   min-width: 820px;
+  background-color: bisque;
+}
+
+.currentNotificationsHeader {
+  display: flex;
+  gap: 20px;
+  border-bottom: 2px solid #000;
+  padding: 12px 0px;
+  /* background-color: red; */
+}
+
+.notificationFilterOption {
+  font-family: "Golos Text";
+  font-size: 14px;
+  font-weight: 400;
+  /* padding: 12px 0px; */
+  border-bottom: 2px solid #000;
+  transition: border-bottom-color 0.3s ease;
+}
+
+.activeFilterOption {
+  border-bottom: 2px solid red;
 }
 
 .newNotifications {
-  /* background-color: rgb(192, 183, 183); */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -56,6 +77,37 @@
   color: rgb(68, 65, 65);
 }
 
+.selectField {
+  padding: 12px 16px;
+  height: 42px;
+  border: 1px solid rgb(32, 30, 29, 0.45);
+  color: rgb(96, 93, 93);
+  background-color: #fff;
+  font-size: 12px;
+  font-family: "Golos Text", sans-serif;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.selectContainerButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.subscribeButton {
+  font-family: "Golos Text", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid #000;
+  padding: 12px 16px;
+  width: 100%;
+  display: flex;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
 .inputField {
   padding: 12px 16px;
   border: 1px solid rgb(32, 30, 29, 0.45);
@@ -77,18 +129,6 @@
   outline: none;
   transition: border-color 0.3s ease;
   resize: vertical;
-}
-
-.selectField {
-  padding: 12px 16px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
-  color: rgb(96, 93, 93);
-  background-color: #fff;
-  font-size: 12px;
-  font-family: "Golos Text", sans-serif;
-  font-weight: 700;
-  outline: none;
-  transition: border-color 0.3s ease;
 }
 
 .inputField:hover,
@@ -129,17 +169,4 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.subscribeButton {
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* background-color: rgb(32, 30, 29); */
-  border: 1px solid transparent;
-  padding: 12px 16px;
-  width: 100%;
-  display: flex;
-  transition: border-color 0.3s ease;
-  cursor: pointer;
-  margin-bottom: 20px;
 }
