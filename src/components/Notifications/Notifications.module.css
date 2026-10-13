@@ -5,12 +5,14 @@
 
 .notificationsPanel {
   display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
   gap: 32px;
 }
 
 .currentNotifications {
   min-width: 820px;
-  background-color: bisque;
+  /* background-color: bisque; */
 }
 
 .currentNotificationsHeader {
@@ -21,11 +23,17 @@
   /* background-color: red; */
 }
 
+.notificationHeaderContainer {
+  width: 1170px;
+  margin: 0 auto;
+  padding: 20px 0px;
+}
+
 .notificationFilterOption {
   font-family: "Golos Text";
   font-size: 14px;
-  font-weight: 400;
-  /* padding: 12px 0px; */
+  font-weight: 700;
+  padding: 12px;
   border-bottom: 2px solid #000;
   transition: border-bottom-color 0.3s ease;
 }
@@ -47,7 +55,7 @@
 
 .newNotificationsDescription {
   color: rgb(96, 93, 93);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .notificationsHeaders {
@@ -169,4 +177,33 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.reminderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(32, 30, 29, 0.18);
+  font-family: "Golos Text", sans-serif, system-ui;
+}
+
+.firstLineText {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.notificationTypeText {
+  /* font-family: "Golos Text", sans-serif, system-ui; */
+}
+
+.markReadButton {
+  width: fit-content;
+  padding: 6px 12px;
+  font-family: "Golos Text", sans-serif, system-ui;
+  font-weight: 700;
+  border: 1px solid rgba(32, 30, 29, 0.18);
+  background-color: transparent;
 }

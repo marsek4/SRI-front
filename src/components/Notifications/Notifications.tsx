@@ -74,16 +74,20 @@ const Notifications = () => {
         },
       });
       if (!res.ok) {
-        console.log("Ошибка при создании напоминания");
+        console.log("Ошибка при прочтении напоминания");
         return;
       }
 
-      console.log("Успешное создание напоминания");
+      console.log("Успешное прочтение напоминания");
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
+
+  const handleNotificationRead = (id: string) => {
+    mutationNotificationsRead.mutate(id);
+  };
 
   const createReminder = () => {
     if (!remindAt) return;
@@ -95,13 +99,9 @@ const Notifications = () => {
     });
   };
 
-  const handleNotificationRead = (id: string) => {
-    mutationNotificationsRead.mutate(id);
-  };
-
   return (
     <div className={styles.notificationsContainer}>
-      <header>
+      <header className={styles.notificationHeaderContainer}>
         <h1 className={styles.notificationsHeaders}>Notifications</h1>
         <p className={styles.notificationsDescription}>
           {" "}
@@ -116,6 +116,7 @@ const Notifications = () => {
               onClick={() => setNotificationFilter("all")}
             >
               All
+              {/* <span>{notifications.}</span> */}
             </span>
             <span
               className={`${styles.notificationFilterOption} ${notificationFilter === "unread" ? styles.activeFilterOption : ""}`}
@@ -126,16 +127,27 @@ const Notifications = () => {
           </div>
           {notificationFilter === "all" &&
             notifications.map((item) => (
-              <div key={item.id}>
-                {item.body}{" "}
+              <div key={item.id} className={styles.reminderContainer}>
+                <div className={styles.firstLineText}>
+                  {" "}
+                  <span className={styles.notificationTypeText}>
+                    {/* {item.kind.toUpperCase()} */}
+                    REMINDER
+                  </span>
+                  <span>YESTERDAY, 11:11AM</span>
+                </div>
+
                 {item.read === false && (
                   <button
                     type="button"
                     onClick={() => handleNotificationRead(item.id)}
+                    className={styles.markReadButton}
                   >
-                    Mark as 'read'
+                    Mark as read
                   </button>
                 )}
+                <div>{item.body}</div>
+                <div>{item.title}</div>
               </div>
             ))}
           {notificationFilter === "unread" &&
@@ -146,9 +158,7 @@ const Notifications = () => {
         </section>
         <section className={styles.newNotifications}>
           <h2 className={styles.newNotificationsHeader}>New reminder</h2>
-          <p className={styles.newNotificationsDescription}>
-            visible only to you
-          </p>
+          <p className={styles.notificationsDescription}>Visible only to you</p>
           <label className={styles.inputContainer}>
             Title{" "}
             <input

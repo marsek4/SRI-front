@@ -1,0 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
+
+const useNotificationsPreview = () => {
+    const query = useQuery({
+        queryKey: ['notifications'],
+        queryFn: async () => {
+            
+        }
+    })
+}

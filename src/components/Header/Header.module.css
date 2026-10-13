@@ -32,7 +32,6 @@
 }
 
 .headerTextContainer {
-  /* background-color: yellow; */
 }
 
 .headerText {
@@ -63,6 +62,7 @@
   aspect-ratio: 1/1;
   /* height: 40px; */
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .userSymbols {
@@ -110,6 +110,7 @@
   gap: 10px;
   padding: 0px 8px;
   border: 1px solid rgba(32, 30, 29, 0.45);
+  cursor: pointer;
 }
 
 .logoutButtonText {
@@ -135,6 +136,7 @@
   cursor: pointer;
   transition: border-bottom-color 0.3s ease;
   padding: 13px 4px;
+  text-decoration: none;
 }
 
 .navbarItem:hover {

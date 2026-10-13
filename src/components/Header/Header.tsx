@@ -1,6 +1,7 @@
 import styles from "./Header.module.css";
 import { Bell, LogOut } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 
 const navItems = [
   { to: "/overview", label: "Overview" },
@@ -11,6 +12,10 @@ const navItems = [
 ];
 
 const Header = () => {
+  const handleLoguot = () => {
+    useAuthStore.getState().logout();
+  };
+
   return (
     <>
       <div className={styles.headerContainer}>
@@ -36,13 +41,18 @@ const Header = () => {
           <span className={styles.userSymbols}>АИ</span>
 
           <div className={styles.profileTextBlock}>
-            <p className={styles.userNameText}>Анна Ивановна</p>
+            <p className={styles.userNameText}>
+              {useAuthStore.getState().user?.username}
+            </p>
             <p className={styles.userRole}>
-              Исследователь · <span className={styles.userLogin}>ivanova</span>
+              {useAuthStore.getState().user?.role} ·{" "}
+              <span className={styles.userLogin}>
+                {useAuthStore.getState().user?.displayName}
+              </span>
             </p>
           </div>
 
-          <button className={styles.logoutButton}>
+          <button className={styles.logoutButton} onClick={handleLoguot}>
             <LogOut
               width={18}
               height={18}
