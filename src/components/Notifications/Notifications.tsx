@@ -1,21 +1,26 @@
 import { useState } from "react";
 import styles from "./Notifications.module.css";
-import { MoveUp } from "lucide-react";
+import { MoveUp, X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
 import { useSubscriptions } from "@/hooks/useSubscriptions";
-import { useNotifications } from "@/hooks/useNotifications";
+import { useNotifications } from "@/features/notifications/queries";
+import { useNotificationRead } from "@/features/notifications/mutations";
+import { type Reminder } from "@/features/reminders/types";
+X;
 
 type NotificationType = "all" | "unread";
 
-type Reminder = {
-  title: string;
-  body: string;
-  remindAt?: string;
+const conformity: Record<string, string> = {
+  NOTIFICATION_KIND_BOOKING: "BOOKING",
+  NOTIFICATION_KIND_REMINDER: "REMINDER",
+  NOTIFICATION_KIND_SYSTEM: "SYSTEM",
 };
 
 const Notifications = () => {
   const qc = useQueryClient();
+
+  const markRead = useNotificationRead();
 
   const {
     subscriptions,
@@ -25,6 +30,7 @@ const Notifications = () => {
   } = useSubscriptions();
   const {
     notifications,
+    unreadCount,
     isLoading: isNotificationsLoading,
     isError: isNotificationsError,
     error: errorNotifications,
@@ -60,33 +66,8 @@ const Notifications = () => {
     },
   });
 
-  // const mutationSubscription = async () => {
-  //   mutationFn: async () => {};
-  // };
-
-  const mutationNotificationsRead = useMutation({
-    mutationFn: async (id: string) => {
-      const token = useAuthStore.getState().accessToken;
-      const res = await fetch(`/api/v1/notifications/${id}:read`, {
-        method: "POST",
-        headers: {
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-      if (!res.ok) {
-        console.log("Ошибка при прочтении напоминания");
-        return;
-      }
-
-      console.log("Успешное прочтение напоминания");
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["notifications"] });
-    },
-  });
-
   const handleNotificationRead = (id: string) => {
-    mutationNotificationsRead.mutate(id);
+    markRead.mutate(id);
   };
 
   const createReminder = () => {
@@ -115,8 +96,7 @@ const Notifications = () => {
               className={`${styles.notificationFilterOption} ${notificationFilter === "all" ? styles.activeFilterOption : ""}`}
               onClick={() => setNotificationFilter("all")}
             >
-              All
-              {/* <span>{notifications.}</span> */}
+              All {notifications.length}
             </span>
             <span
               className={`${styles.notificationFilterOption} ${notificationFilter === "unread" ? styles.activeFilterOption : ""}`}
@@ -128,15 +108,28 @@ const Notifications = () => {
           {notificationFilter === "all" &&
             notifications.map((item) => (
               <div key={item.id} className={styles.reminderContainer}>
-                <div className={styles.firstLineText}>
-                  {" "}
-                  <span className={styles.notificationTypeText}>
-                    {/* {item.kind.toUpperCase()} */}
-                    REMINDER
-                  </span>
-                  <span>YESTERDAY, 11:11AM</span>
-                </div>
+                <div
+                  className={`${styles.readIndicator} ${item.read === false ? styles.readIndicatorVisible : ""}`}
+                ></div>
 
+                <div className={styles.innerContainer}>
+                  <div className={styles.firstLineText}>
+                    {" "}
+                    <span className={styles.notificationTypeText}>
+                      {conformity[item.kind].toUpperCase()}
+                    </span>
+                    <span>YESTERDAY, 11:11AM</span>
+                  </div>
+                  <span className={styles.innerContainerTitle}>
+                    {item.title}
+                  </span>
+                  <span>{item.topic}</span>
+                  {item.remindAt && (
+                    <span className={styles.reminderText}>
+                      Remind at: {item.remindAt}
+                    </span>
+                  )}
+                </div>
                 {item.read === false && (
                   <button
                     type="button"
@@ -146,15 +139,46 @@ const Notifications = () => {
                     Mark as read
                   </button>
                 )}
-                <div>{item.body}</div>
-                <div>{item.title}</div>
               </div>
             ))}
           {notificationFilter === "unread" &&
-            notifications.map(
-              (item) =>
-                item.read === false && <div key={item.id}>{item.body}</div>,
-            )}
+            notifications
+              .filter((item) => item.read === false)
+              .map((item) => (
+                <div key={item.id} className={styles.reminderContainer}>
+                  <div
+                    className={`${styles.readIndicator} ${item.read === false ? styles.readIndicatorVisible : ""}`}
+                  ></div>
+
+                  <div className={styles.innerContainer}>
+                    <div className={styles.firstLineText}>
+                      {" "}
+                      <span className={styles.notificationTypeText}>
+                        {conformity[item.kind].toUpperCase()}
+                      </span>
+                      <span>YESTERDAY, 11:11AM</span>
+                    </div>
+                    <span className={styles.innerContainerTitle}>
+                      {item.title}
+                    </span>
+                    <span>{item.topic}</span>
+                    {item.remindAt && (
+                      <span className={styles.reminderText}>
+                        Remind at: {item.remindAt}
+                      </span>
+                    )}
+                  </div>
+                  {item.read === false && (
+                    <button
+                      type="button"
+                      onClick={() => handleNotificationRead(item.id)}
+                      className={styles.markReadButton}
+                    >
+                      Mark as read
+                    </button>
+                  )}
+                </div>
+              ))}
         </section>
         <section className={styles.newNotifications}>
           <h2 className={styles.newNotificationsHeader}>New reminder</h2>

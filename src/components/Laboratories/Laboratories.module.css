@@ -193,6 +193,7 @@
   border: none;
   text-decoration: underline;
   cursor: pointer;
+  padding-top: 20px;
 
   color: red;
   font-size: 13px;

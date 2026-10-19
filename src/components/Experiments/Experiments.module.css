@@ -1,0 +1,153 @@
+.experminentsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1170px;
+  margin: 0 auto;
+  /* background-color: aquamarine; */
+}
+
+.experimentsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.experimentsHeaderTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.experimentsHeaderText {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 34px;
+  color: #000;
+}
+
+.experimentsHeaderSubtext {
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 16px;
+  color: rgb(96, 93, 93);
+}
+
+.newExperimentButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: fit-content;
+  background-color: red;
+  padding: 12px 16px;
+  border: none;
+  cursor: pointer;
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  transform: rotate(90deg);
+}
+
+.modePanel {
+  gap: 20px;
+  padding: 10px 0px;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+}
+
+.modePanelOption {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: rgb(96, 93, 93);
+
+  margin-right: 20px;
+  padding: 10px 0px;
+  border-bottom: 2px solid transparent;
+}
+
+.isModeActive {
+  border-bottom: 2px solid red;
+  color: #000;
+}
+
+.filterSection {
+  padding: 20px 0px;
+  border-bottom: 1px solid rgba(32, 30, 29, 0.45);
+}
+
+.inputRow {
+  display: flex;
+  gap: 10px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0px;
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: rgb(68, 65, 65);
+}
+
+.inputField {
+  padding: 12px 16px;
+  border: 1px solid rgba(32, 30, 29, 0.45);
+  background-color: transparent;
+  outline: none;
+
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 16px;
+  color: rgba(32, 30, 29);
+}
+
+.inputField:hover,
+.inputField:focus {
+  border: 1px solid red;
+}
+
+.searchButton {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: fit-content;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  background-color: rgba(32, 30, 29);
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: rgb(243, 242, 242);
+  cursor: pointer;
+}
+
+.searchIcon {
+  width: 16px;
+  height: 16px;
+  color: rgb(243, 242, 242);
+}
+
+.resetButton {
+  height: fit-content;
+  padding: 10px 12px;
+  border: 1px solid rgba(32, 30, 29, 0.45);
+  background-color: transparent;
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: rgb(32, 30, 29);
+  cursor: pointer;
+}

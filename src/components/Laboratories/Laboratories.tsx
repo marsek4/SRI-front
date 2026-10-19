@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
 import styles from "./Laboratories.module.css";
 import { useLabs } from "@/hooks/useLabs";
-import { useLabSchedule } from "@/hooks/useLabSchedule";
 import { MoveUp, Bell, ChevronRight, ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { type BookingData } from "@/types/types";
+import { useAuthStore } from "@/store/authStore";
 
 const Laboratories = () => {
   const navigate = useNavigate();
+
+  const token = useAuthStore.getState().accessToken;
 
   const [searchValue, setSearchValue] = useState<string>("");
   const [dateValue, setDateValue] = useState<string>("");
   const [beginning, setBeginning] = useState<string>("");
   const [end, setEnd] = useState<string>("");
-  const [aimText, setAimText] = useState<string>("");
+  const [purposeText, setPurposeText] = useState<string>("");
   const [note, setNote] = useState<string>("");
 
   const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
@@ -84,8 +88,13 @@ const Laboratories = () => {
 
   const cellKey = (day: Day, hour: string) => `${day.date}-${hour}`;
 
-  const handleMouseDown = (key: string) => {
+  const handleMouseDown = (day: Day, key: string) => {
     setIsSelecting(true);
+
+    // синхронизировать дату с выбранным днём
+    const formattedDate = `${day.year}-${String(day.month + 1).padStart(2, "0")}-${String(day.date).padStart(2, "0")}`;
+    setDateValue(formattedDate);
+
     const isCurrentlySelected = selectedCells.has(key);
     setDragMode(isCurrentlySelected ? "remove" : "add");
 
@@ -150,8 +159,36 @@ const Laboratories = () => {
     { label: "SUN", date: 18, month: 9, year: 2026 },
   ];
 
+  const mutation = useMutation({
+    mutationFn: async (data: BookingData) => {
+      const res = await fetch("/api/v1/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+    },
+  });
+
   const createBooking = () => {
-    console.log(123);
+    if (!labId || !dateValue || !beginning || !end) return;
+
+    const startTime = new Date(`${dateValue}T${beginning}:00`).toISOString();
+    const endTime = new Date(`${dateValue}T${end}:00`).toISOString();
+
+    mutation.mutate({
+      labId,
+      startTime,
+      endTime,
+      purpose: purposeText,
+      accessNote: note,
+    });
   };
 
   const resetBooking = () => {
@@ -284,7 +321,7 @@ const Laboratories = () => {
                       <div
                         key={hour}
                         onMouseDown={() => {
-                          !past && handleMouseDown(key);
+                          !past && handleMouseDown(day, key);
                         }}
                         onMouseEnter={() => {
                           !past && handleMouseEnter(key);
@@ -350,10 +387,10 @@ const Laboratories = () => {
               </button>
             </div>
             <label className={styles.inputContainer}>
-              Aim{" "}
+              Purpose{" "}
               <textarea
-                value={aimText}
-                onChange={(e) => setAimText(e.target.value)}
+                value={purposeText}
+                onChange={(e) => setPurposeText(e.target.value)}
                 className={styles.textareaField}
               />
             </label>
@@ -367,7 +404,7 @@ const Laboratories = () => {
               />
             </label>
             <p className={styles.postText}>Only you and admin can see it</p>
-            <button className={styles.bookingButton}>
+            <button className={styles.bookingButton} onClick={createBooking}>
               Book <MoveUp className={styles.moveUp} />
             </button>
           </div>

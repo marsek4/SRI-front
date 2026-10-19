@@ -1,70 +1,24 @@
 import styles from "./Authorization.module.css";
 import { useState } from "react";
 import { MoveUp } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/authStore";
-import {
-  type LoginData,
-  type RegisterData,
-  // type UserData,
-  type FullUserData,
-} from "@/types/types";
-import { useNavigate } from "react-router-dom";
+import { useLogin, useRegister } from "@/features/auth/mutations";
 
 type AuthMode = "authorization" | "registration";
 
 const Authorization = () => {
-  const navigate = useNavigate();
-
-  // const qc = useQueryClient();
-
-  const setAuth = useAuthStore((s) => s.setAuth);
-
-  const mutation = useMutation({
-    mutationFn: async (data: LoginData | RegisterData) => {
-      const url =
-        formMode === "authorization"
-          ? "/api/v1/auth/login"
-          : "api/v1/auth/register";
-
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-      const result: FullUserData = await res.json();
-
-      return result;
-    },
-    onSuccess: (data) => {
-      // qc.invalidateQueries({ queryKey: ["auth"] });
-      setAuth({
-        accessToken: data.accessToken,
-        expiresAt: data.expiresAt,
-        user: data.user,
-      });
-      navigate("/overview");
-    },
-    onError: (error) => {
-      console.error("Ошибка запроса: ", error);
-    },
-  });
+  const login = useLogin();
+  const register = useRegister();
 
   const [username, setUsername] = useState<string>("");
   const [displayName, setDisplayName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [error, setError] = useState<string>("");
   const [formMode, setFormMode] = useState<AuthMode>("authorization");
 
   const handleSubmit = () => {
     if (formMode === "authorization") {
-      mutation.mutate({ username, password });
+      login.mutate({ username, password });
     } else {
-      mutation.mutate({ username, displayName, password });
+      register.mutate({ username, displayName, password });
     }
   };
 

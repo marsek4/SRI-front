@@ -1,28 +1,3 @@
-export type LoginData = {
-  username: string;
-  password: string;
-};
-
-export type RegisterData = {
-  username: string;
-  displayName: string;
-  password: string;
-};
-
-export type UserData = {
-  id: string;
-  username: string;
-  displayName: string;
-  role: string;
-  createdAt: string;
-};
-
-export type FullUserData = {
-  accessToken: string;
-  expiresAt: string;
-  user: UserData;
-};
-
 export type Subscription = {
   id: string;
   topic: string;
@@ -68,4 +43,25 @@ type LabBusyInterval = {
 export type LabSchedule = {
   labId: string;
   busy: LabBusyInterval[];
+};
+
+export type BookingData = {
+  labId: string;
+  startTime: string;
+  endTime: string;
+  purpose: string;
+  accessNote: string;
+};
+
+export type Booking = {
+  id: string;
+  labId: string;
+  ownerId: string;
+  ownerUsername: string;
+  startTime: string;
+  endTime: string;
+  purpose: string;
+  accessNote: string;
+  status: string;
+  createdAt: string;
 };

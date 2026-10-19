@@ -15,31 +15,34 @@
   /* background-color: bisque; */
 }
 
-.currentNotificationsHeader {
-  display: flex;
-  gap: 20px;
-  border-bottom: 2px solid #000;
-  padding: 12px 0px;
-  /* background-color: red; */
-}
-
 .notificationHeaderContainer {
   width: 1170px;
   margin: 0 auto;
   padding: 20px 0px;
 }
 
+.currentNotificationsHeader {
+  /* display: flex;
+  gap: 20px; */
+  border-bottom: 2px solid #000;
+  padding: 10px 0px;
+  /* background-color: red; */
+}
+
 .notificationFilterOption {
   font-family: "Golos Text";
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  padding: 12px;
-  border-bottom: 2px solid #000;
-  transition: border-bottom-color 0.3s ease;
+  color: rgb(96, 93, 93);
+
+  padding: 10px 0px;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
 }
 
 .activeFilterOption {
   border-bottom: 2px solid red;
+  color: #000;
 }
 
 .newNotifications {
@@ -181,11 +184,36 @@
 
 .reminderContainer {
   display: flex;
-  flex-direction: column;
+  /* justify-content: space-between; */
   gap: 6px;
   padding: 16px 24px;
   border-bottom: 1px solid rgba(32, 30, 29, 0.18);
   font-family: "Golos Text", sans-serif, system-ui;
+  /* background-color: beige; */
+}
+
+.innerContainerTitle {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+}
+
+.readIndicator {
+  margin: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+.readIndicatorVisible {
+  background-color: red;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .firstLineText {
@@ -196,14 +224,32 @@
 }
 
 .notificationTypeText {
-  /* font-family: "Golos Text", sans-serif, system-ui; */
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 12px;
+  color: rgb(96, 93, 93);
 }
 
 .markReadButton {
+  margin-left: auto;
   width: fit-content;
+  height: fit-content;
   padding: 6px 12px;
   font-family: "Golos Text", sans-serif, system-ui;
   font-weight: 700;
-  border: 1px solid rgba(32, 30, 29, 0.18);
+  border: 1px solid rgba(32, 30, 29, 0.45);
   background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.markReadButton:hover {
+  background-color: rgb(32, 30, 29, 0.07);
+}
+
+.reminderText {
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 12px;
+  color: red;
 }

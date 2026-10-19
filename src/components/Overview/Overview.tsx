@@ -1,12 +1,13 @@
 import { MoveUp } from "lucide-react";
 import styles from "./Overview.module.css";
-import { useNotifications } from "@/hooks/useNotifications";
+// import { useNotifications } from "@/hooks/useNotifications";
+import { useNotifications } from "@/features/notifications/queries";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
+import { useNotificationRead } from "@/features/notifications/mutations";
 
 const Overview = () => {
-  const qc = useQueryClient();
+  const markRead = useNotificationRead();
 
   const navigate = useNavigate();
 
@@ -16,29 +17,8 @@ const Overview = () => {
     (notification) => notification.read === false,
   );
 
-  const mutationNotificationsRead = useMutation({
-    mutationFn: async (id: string) => {
-      const token = useAuthStore.getState().accessToken;
-      const res = await fetch(`/api/v1/notifications/${id}:read`, {
-        method: "POST",
-        headers: {
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-      if (!res.ok) {
-        console.log("Ошибка при прочтении напоминания");
-        return;
-      }
-
-      console.log("Успешное прочтение напоминания");
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["notifications"] });
-    },
-  });
-
   const handleNotificationRead = (id: string) => {
-    mutationNotificationsRead.mutate(id);
+    markRead.mutate(id);
   };
 
   return (
@@ -82,8 +62,6 @@ const Overview = () => {
           </header>
           {unreadNotifications.map((notification) => (
             <div key={notification.id} className={styles.unreadNotification}>
-              {/* <span></span> */}
-              {/* <div> */}
               <p className={styles.reminderDescription}>
                 {notification.remindAt}
               </p>
@@ -94,7 +72,6 @@ const Overview = () => {
               >
                 Mark as read
               </button>
-              {/* </div> */}
             </div>
           ))}
         </section>

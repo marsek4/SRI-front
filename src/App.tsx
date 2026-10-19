@@ -4,6 +4,9 @@ import Overview from "@components/Overview";
 import Notifications from "@components/Notifications";
 import ProtectedLayout from "@components/ProtectedLayout";
 import Laboratories from "@components/Laboratories";
+import Experiments from "./components/Experiments";
+import MyBookings from "./components/MyBookings";
+import NewExperiment from "./components/NewExperiment";
 
 const App = () => {
   return (
@@ -16,6 +19,12 @@ const App = () => {
           <Route path="/laboratories" element={<Laboratories />} />
           <Route path="/laboratories/:labId" element={<Laboratories />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/experiments" element={<Experiments />} />
+          <Route
+            path="/experiments/new-experiment"
+            element={<NewExperiment />}
+          />
+          <Route path="/my-bookings" element={<MyBookings />} />
         </Route>
       </Routes>
     </BrowserRouter>
