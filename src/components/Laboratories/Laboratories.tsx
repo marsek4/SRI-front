@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Laboratories.module.css";
-import { useLabs } from "@/hooks/useLabs";
-import { MoveUp, Bell, ChevronRight, ChevronLeft } from "lucide-react";
+import Calendar from "./Calendar/Calendar";
+import { MoveUp, Bell } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { type BookingData } from "@/types/types";
-import { useAuthStore } from "@/store/authStore";
+import {
+  useLabs,
+  useLab,
+  useLabSchedule,
+} from "@/features/laboratories/queries";
+import { useCreateBooking } from "@/features/bookings/mutation";
 
 const Laboratories = () => {
   const navigate = useNavigate();
-
-  const token = useAuthStore.getState().accessToken;
-
   const [searchValue, setSearchValue] = useState<string>("");
   const [dateValue, setDateValue] = useState<string>("");
   const [beginning, setBeginning] = useState<string>("");
@@ -19,173 +19,29 @@ const Laboratories = () => {
   const [purposeText, setPurposeText] = useState<string>("");
   const [note, setNote] = useState<string>("");
 
-  const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [selectionStart, setSelectionStart] = useState<string | null>(null);
-  const [dragMode, setDragMode] = useState<"add" | "remove">("add");
-
-  useEffect(() => {
-    const handleMouseUp = () => setIsSelecting(false);
-    window.addEventListener("mouseup", handleMouseUp);
-    return () => window.removeEventListener("mouseup", handleMouseUp);
-  }, []);
-
-  const { labId } = useParams<{ labId: string }>();
-
-  const { laboratories, isLoading, isError, error } = useLabs();
-
-  const HOURS = [
-    "8:00",
-    "9:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-  ];
-
-  const now = new Date();
-
-  type Day = {
-    label: string;
-    date: number;
-    month: number;
-    year: number;
-  };
-
-  const parseHour = (hour: string) => parseInt(hour, 10);
-
-  const isPast = (day: Day, hour: string) => {
-    const cellDate = new Date(
-      day.year,
-      day.month,
-      day.date,
-      parseHour(hour),
-      0,
-    );
-    return cellDate < now;
-  };
-
-  const isToday = (day: Day) => {
-    return (
-      day.year === now.getFullYear() &&
-      day.month === now.getMonth() &&
-      day.date === now.getDate()
-    );
-  };
-
-  // const isCurrentHour = (day: Day, hour: string) => {
-  //   if (!isToday(day)) return false;
-  //   return parseHour(hour) === now.getHours();
-  // };
-
-  const cellKey = (day: Day, hour: string) => `${day.date}-${hour}`;
-
-  const handleMouseDown = (day: Day, key: string) => {
-    setIsSelecting(true);
-
-    // синхронизировать дату с выбранным днём
-    const formattedDate = `${day.year}-${String(day.month + 1).padStart(2, "0")}-${String(day.date).padStart(2, "0")}`;
-    setDateValue(formattedDate);
-
-    const isCurrentlySelected = selectedCells.has(key);
-    setDragMode(isCurrentlySelected ? "remove" : "add");
-
-    setSelectedCells((prev) => {
-      const next = new Set(prev);
-      if (isCurrentlySelected) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
-
-  const handleMouseEnter = (key: string) => {
-    if (!isSelecting) return;
-
-    setSelectedCells((prev) => {
-      const next = new Set(prev);
-      if (dragMode === "add") next.add(key);
-      else next.delete(key);
-      return next;
-    });
-  };
-
-  const parseHourFromKey = (key: string) => {
-    const parts = key.split("-");
-    return parseInt(parts[parts.length - 1], 10);
-  };
-
-  const getSelectionRange = () => {
-    if (selectedCells.size === 0) return null;
-
-    const hours = Array.from(selectedCells).map(parseHourFromKey);
-    const minHour = Math.min(...hours);
-    const maxHour = Math.max(...hours);
-
-    return {
-      start: minHour,
-      end: maxHour + 1,
-    };
-  };
-
-  const formatHour = (h: number) => `${String(h).padStart(2, "0")}:00`;
-
-  const range = getSelectionRange();
-
-  useEffect(() => {
+  const handleRangeChange = (
+    range: { date: string; start: string; end: string } | null,
+  ) => {
     if (!range) {
+      setDateValue("");
       setBeginning("");
       setEnd("");
       return;
     }
-    setBeginning(formatHour(range.start));
-    setEnd(formatHour(range.end));
-  }, [range?.start, range?.end]);
+    setDateValue(range.date);
+    setBeginning(range.start);
+    setEnd(range.end);
+  };
 
-  const DAYS: Day[] = [
-    { label: "MON", date: 12, month: 9, year: 2026 },
-    { label: "TUE", date: 13, month: 9, year: 2026 },
-    { label: "WED", date: 14, month: 9, year: 2026 },
-    { label: "THU", date: 15, month: 9, year: 2026 },
-    { label: "FRI", date: 16, month: 9, year: 2026 },
-    { label: "SUT", date: 17, month: 9, year: 2026 },
-    { label: "SUN", date: 18, month: 9, year: 2026 },
-  ];
+  const createBookingMutation = useCreateBooking();
 
-  const mutation = useMutation({
-    mutationFn: async (data: BookingData) => {
-      const res = await fetch("/api/v1/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-    },
-  });
-
-  const createBooking = () => {
+  const handleCreateBooking = () => {
     if (!labId || !dateValue || !beginning || !end) return;
 
-    const startTime = new Date(`${dateValue}T${beginning}:00`).toISOString();
-    const endTime = new Date(`${dateValue}T${end}:00`).toISOString();
-
-    mutation.mutate({
+    createBookingMutation.mutate({
       labId,
-      startTime,
-      endTime,
+      startTime: new Date(`${dateValue}T${beginning}:00`).toISOString(),
+      endTime: new Date(`${dateValue}T${end}:00`).toISOString(),
       purpose: purposeText,
       accessNote: note,
     });
@@ -193,11 +49,22 @@ const Laboratories = () => {
 
   const resetBooking = () => {
     setDateValue("");
-    setSelectedCells(new Set());
+    setBeginning("");
+    setEnd("");
+    setPurposeText("");
+    setNote("");
   };
 
+  const { labId } = useParams<{ labId: string }>();
+
+  const { labs } = useLabs();
+  const { lab } = useLab(labId);
+  const { schedule } = useLabSchedule(labId);
+
   if (labId) {
-    const lab = laboratories.find((l) => l.id === labId);
+    if (!lab) {
+      return <div>Laboratory not found</div>;
+    }
 
     return (
       <div className={styles.oneLabContainer}>
@@ -213,10 +80,10 @@ const Laboratories = () => {
         </nav>
         <header className={styles.oneLabHeader}>
           <div className={styles.labDescription}>
-            <p className={styles.labId}>{lab?.id}</p>
-            <h1 className={styles.labHeader}>{lab?.name}</h1>
+            <p className={styles.labId}>{lab.id}</p>
+            <h1 className={styles.labHeader}>{lab.name}</h1>
             <span className={styles.labAddress}>
-              {lab?.building} <span>The lab fits {lab?.capacity} people</span>
+              {lab.building} <span>The lab fits {lab.capacity} people</span>
             </span>
           </div>
           <button
@@ -232,12 +99,12 @@ const Laboratories = () => {
         <section className={styles.subHeader}>
           <div className={styles.subHeaderLeftPart}>
             <p className={styles.leftPartDescription}>DESCRIPTION</p>
-            <p className={styles.leftPartDescriptionText}>{lab?.description}</p>
+            <p className={styles.leftPartDescriptionText}>{lab.description}</p>
           </div>
           <div className={styles.subHeaderRightPart}>
             <p className={styles.leftPartDescription}>EQUIPMENT</p>
             <ul className={styles.leftPartOptions}>
-              {lab?.equipment.map((item) => (
+              {lab.equipment.map((item) => (
                 <li key={item} className={styles.leftPartDescriptionText}>
                   {item}
                 </li>
@@ -247,101 +114,7 @@ const Laboratories = () => {
         </section>
         <section className={styles.calendarSection}>
           <div className={styles.calendarContainer}>
-            <div className={styles.calendarInstruction}>
-              <div>
-                <h2 className={styles.occupaitonHeader}>
-                  Occupation · 12 — 18 of October 2026
-                </h2>
-                <p className={styles.instructionText}>
-                  Select a range with the mouse or select a cell using the
-                  keyboard.
-                </p>
-              </div>
-              <div className={styles.backForwardButtonContainer}>
-                <button className={styles.backForwardButton}>
-                  <ChevronLeft className={styles.chevron} />
-                </button>
-                <div className={styles.currentWeekText}>Current week</div>
-                <button className={styles.backForwardButton}>
-                  <ChevronRight className={styles.chevron} />
-                </button>
-              </div>
-            </div>
-            <div className={styles.calendarColors}>
-              <div className={styles.colorContainer}>
-                <div className={`${styles.iconOccupied} ${styles.icon}`}></div>
-                <p>Occupied</p>
-              </div>
-              <div className={styles.colorContainer}>
-                <div className={`${styles.iconYour} ${styles.icon}`}></div>
-                <p>Your booking</p>
-              </div>
-              <div className={styles.colorContainer}>
-                <div className={`${styles.iconChoosen} ${styles.icon}`}></div>
-                <p>Choosen interval</p>
-              </div>
-              <div className={styles.colorContainer}>
-                <div className={`${styles.iconPast} ${styles.icon}`}></div>
-                <p>Past time</p>
-              </div>
-            </div>
-
-            <div className={styles.calendar}>
-              <div className={styles.calendarTime}>
-                <div className={styles.blankCell} />
-                {HOURS.map((hour) => (
-                  <div key={hour} className={styles.timeCell}>
-                    <p className={styles.timeCellText}>{hour}</p>
-                  </div>
-                ))}
-              </div>
-
-              {DAYS.map((day) => (
-                <div key={day.label} className={styles.calendarDay}>
-                  <div
-                    className={`${styles.calendarDayTop} ${isToday(day) ? styles.calendarDayToday : ""}`}
-                  >
-                    <p className={styles.calendarDayText}>{day.label}</p>
-                    <p className={styles.calendarDayNumber}>{day.date}</p>
-                  </div>
-
-                  {HOURS.map((hour) => {
-                    const key = cellKey(day, hour);
-                    const isSelected = selectedCells.has(key);
-                    const past = isPast(day, hour);
-                    const hourNum = parseHour(hour);
-
-                    const showLabel =
-                      range &&
-                      isSelected &&
-                      hourNum === range.start &&
-                      range.end > range.start + 1;
-
-                    return (
-                      <div
-                        key={hour}
-                        onMouseDown={() => {
-                          !past && handleMouseDown(day, key);
-                        }}
-                        onMouseEnter={() => {
-                          !past && handleMouseEnter(key);
-                          // setBeginning(hour);
-                        }}
-                        className={`${styles.calendarDayCell} ${
-                          past ? styles.calendarPastDayCell : ""
-                        } ${isSelected ? styles.calendarSelectedCell : ""}`}
-                      >
-                        {showLabel && (
-                          <span className={styles.selectionLabel}>
-                            {formatHour(range.start)} – {formatHour(range.end)}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+            <Calendar schedule={schedule} onRangeChange={handleRangeChange} />
           </div>
           <div className={styles.calendarFormContainer}>
             <header className={styles.formHeader}>New booking</header>
@@ -381,7 +154,7 @@ const Laboratories = () => {
               <button
                 type="button"
                 className={styles.resetButton}
-                onClick={() => resetBooking()}
+                onClick={resetBooking}
               >
                 Reset
               </button>
@@ -404,7 +177,10 @@ const Laboratories = () => {
               />
             </label>
             <p className={styles.postText}>Only you and admin can see it</p>
-            <button className={styles.bookingButton} onClick={createBooking}>
+            <button
+              className={styles.bookingButton}
+              onClick={handleCreateBooking}
+            >
               Book <MoveUp className={styles.moveUp} />
             </button>
           </div>
@@ -436,11 +212,11 @@ const Laboratories = () => {
         </label>
       </section>
       <span className={styles.labStatistic}>
-        <p>All: {laboratories.length}</p>
+        <p>All: {labs.length}</p>
         <p>The laboratory ID is used in subscription topics: lab:{"<id>"}</p>
       </span>
       <ul className={styles.labOptionsContainer}>
-        {laboratories.map((lab) => (
+        {labs.map((lab) => (
           <li
             key={lab.id}
             className={styles.labOption}

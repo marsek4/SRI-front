@@ -20,48 +20,48 @@ export type Notifications = {
   unreadCount: number;
 };
 
-export type Lab = {
-  id: string;
-  name: string;
-  building: string;
-  capacity: number;
-  equipment: string[];
-  description: string;
-};
-
-// export type Labs = {
-//   laboratories: Lab[];
+// export type Lab = {
+//   id: string;
+//   name: string;
+//   building: string;
+//   capacity: number;
+//   equipment: string[];
+//   description: string;
 // };
 
-export type Labs = Lab[];
+// // export type Labs = {
+// //   laboratories: Lab[];
+// // };
 
-type LabBusyInterval = {
-  startTime: string;
-  endTime: string;
-};
+// export type Labs = Lab[];
 
-export type LabSchedule = {
-  labId: string;
-  busy: LabBusyInterval[];
-};
+// type LabBusyInterval = {
+//   startTime: string;
+//   endTime: string;
+// };
 
-export type BookingData = {
-  labId: string;
-  startTime: string;
-  endTime: string;
-  purpose: string;
-  accessNote: string;
-};
+// export type LabSchedule = {
+//   labId: string;
+//   busy: LabBusyInterval[];
+// };
 
-export type Booking = {
-  id: string;
-  labId: string;
-  ownerId: string;
-  ownerUsername: string;
-  startTime: string;
-  endTime: string;
-  purpose: string;
-  accessNote: string;
-  status: string;
-  createdAt: string;
-};
+// export type BookingData = {
+//   labId: string;
+//   startTime: string;
+//   endTime: string;
+//   purpose: string;
+//   accessNote: string;
+// };
+
+// export type Booking = {
+//   id: string;
+//   labId: string;
+//   ownerId: string;
+//   ownerUsername: string;
+//   startTime: string;
+//   endTime: string;
+//   purpose: string;
+//   accessNote: string;
+//   status: string;
+//   createdAt: string;
+// };

@@ -3,11 +3,9 @@ import styles from "./Notifications.module.css";
 import { MoveUp, X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
-import { useSubscriptions } from "@/hooks/useSubscriptions";
 import { useNotifications } from "@/features/notifications/queries";
 import { useNotificationRead } from "@/features/notifications/mutations";
 import { type Reminder } from "@/features/reminders/types";
-X;
 
 type NotificationType = "all" | "unread";
 
@@ -22,12 +20,12 @@ const Notifications = () => {
 
   const markRead = useNotificationRead();
 
-  const {
-    subscriptions,
-    isLoading: isSubscriptionsLoading,
-    isError: isSubscriptionsError,
-    error: errorSubscriptions,
-  } = useSubscriptions();
+  // const {
+  //   subscriptions,
+  //   isLoading: isSubscriptionsLoading,
+  //   isError: isSubscriptionsError,
+  //   error: errorSubscriptions,
+  // } = useSubscriptions();
   const {
     notifications,
     unreadCount,
@@ -225,13 +223,13 @@ const Notifications = () => {
                 Notifications regarding bookings and announcements for selected
                 laboratories
               </p>
-              {subscriptions && subscriptions.length > 0 ? (
+              {/* {subscriptions && subscriptions.length > 0 ? (
                 subscriptions.map((item) => (
                   <div key={item.id}>{item.topic}</div>
                 ))
               ) : (
                 <p className={styles.noSubscriptions}>No subscriptions yet</p>
-              )}
+              )} */}
             </div>
             {}
             <label className={styles.selectContainer}>
