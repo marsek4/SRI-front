@@ -38,13 +38,18 @@ const Laboratories = () => {
   const handleCreateBooking = () => {
     if (!labId || !dateValue || !beginning || !end) return;
 
-    createBookingMutation.mutate({
-      labId,
-      startTime: new Date(`${dateValue}T${beginning}:00`).toISOString(),
-      endTime: new Date(`${dateValue}T${end}:00`).toISOString(),
-      purpose: purposeText,
-      accessNote: note,
-    });
+    createBookingMutation.mutate(
+      {
+        labId,
+        startTime: new Date(`${dateValue}T${beginning}:00`).toISOString(),
+        endTime: new Date(`${dateValue}T${end}:00`).toISOString(),
+        purpose: purposeText,
+        accessNote: note,
+      },
+      {
+        onSuccess: () => resetBooking(),
+      },
+    );
   };
 
   const resetBooking = () => {

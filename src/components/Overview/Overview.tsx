@@ -62,16 +62,19 @@ const Overview = () => {
           </header>
           {unreadNotifications.map((notification) => (
             <div key={notification.id} className={styles.unreadNotification}>
-              <p className={styles.reminderDescription}>
-                {notification.remindAt}
-              </p>
-              <p className={styles.reminderTitle}>{notification.title}</p>
-              <button
-                className={styles.reminderButton}
-                onClick={() => handleNotificationRead(notification.id)}
-              >
-                Mark as read
-              </button>
+              <div className={styles.redBlock}></div>
+              <div className={styles.textContainer}>
+                <p className={styles.reminderDescription}>
+                  {notification.remindAt}
+                </p>
+                <p className={styles.reminderTitle}>{notification.title}</p>
+                <button
+                  className={styles.reminderButton}
+                  onClick={() => handleNotificationRead(notification.id)}
+                >
+                  Mark as read
+                </button>
+              </div>
             </div>
           ))}
         </section>

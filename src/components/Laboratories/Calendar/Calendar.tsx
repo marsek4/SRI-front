@@ -27,15 +27,27 @@ const HOURS = [
   "21:00",
 ];
 
-const DAYS: Day[] = [
-  { label: "MON", date: 12, month: 9, year: 2026 },
-  { label: "TUE", date: 13, month: 9, year: 2026 },
-  { label: "WED", date: 14, month: 9, year: 2026 },
-  { label: "THU", date: 15, month: 9, year: 2026 },
-  { label: "FRI", date: 16, month: 9, year: 2026 },
-  { label: "SUT", date: 17, month: 9, year: 2026 },
-  { label: "SUN", date: 18, month: 9, year: 2026 },
-];
+const getWeekDays = () => {
+  const now = new Date();
+  const today = now.getDay();
+  const mondayOffSet = today === 0 ? -6 : 1 - today;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + mondayOffSet);
+  monday.setHours(0, 0, 0, 0);
+
+  const labels = ["MON", "TUE", "WED", "THU", "FRI", "SUT", "SUN"];
+
+  return labels.map((label, index) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + index);
+    return {
+      label,
+      date: d.getDate(),
+      month: d.getMonth(),
+      year: d.getFullYear(),
+    };
+  });
+};
 
 type CalendarProps = {
   schedule?: LabSchedule;
@@ -45,6 +57,8 @@ type CalendarProps = {
 };
 
 const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
+  const DAYS = getWeekDays();
+
   const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragMode, setDragMode] = useState<"add" | "remove">("add");

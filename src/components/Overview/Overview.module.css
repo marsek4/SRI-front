@@ -110,7 +110,6 @@
 
 .unreadNotification {
   display: flex;
-  flex-direction: column;
   gap: 10px;
   padding: 12px 10px;
   border-bottom: 1px solid rgba(32, 30, 29, 0.45);
@@ -141,4 +140,11 @@
   border: none;
   cursor: pointer;
   padding: 0;
+}
+
+.redBlock {
+  margin: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
 }
