@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./Calendar.module.css";
 import type { LabSchedule } from "@/features/laboratories/types";
+import type { Booking } from "@/features/bookings/types";
 
 type Day = {
   label: string;
@@ -51,6 +52,7 @@ const getWeekDays = () => {
 
 type CalendarProps = {
   schedule?: LabSchedule;
+  // bookings?: Booking[];
   onRangeChange: (
     range: { date: string; start: string; end: string } | null,
   ) => void;
@@ -62,6 +64,8 @@ const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
   const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragMode, setDragMode] = useState<"add" | "remove">("add");
+
+  console.log(schedule);
 
   const now = new Date();
 

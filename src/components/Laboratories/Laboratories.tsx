@@ -9,6 +9,7 @@ import {
   useLabSchedule,
 } from "@/features/laboratories/queries";
 import { useCreateBooking } from "@/features/bookings/mutation";
+// import { useBooking } from "@/features/bookings/queries";
 
 const Laboratories = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const Laboratories = () => {
   };
 
   const createBookingMutation = useCreateBooking();
+  // const { booking } = useBooking();
 
   const handleCreateBooking = () => {
     if (!labId || !dateValue || !beginning || !end) return;

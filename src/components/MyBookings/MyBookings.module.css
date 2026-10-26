@@ -1,0 +1,55 @@
+.myBookingsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+.myBookingsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.myBookingsTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.myBookingsHeaderText {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 34px;
+  color: #000;
+}
+
+.myBookingsSubtext {
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 16px;
+  color: rgb(96, 93, 93);
+}
+
+.myBookingButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: fit-content;
+  background-color: red;
+  padding: 12px 16px;
+  border: none;
+  cursor: pointer;
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  transform: rotate(90deg);
+}
