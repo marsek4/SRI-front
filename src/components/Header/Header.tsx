@@ -1,7 +1,9 @@
 import styles from "./Header.module.css";
+import commonStyles from "@/styles/shared.module.css";
 import { Bell, LogOut } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
+import { useNotifications } from "@/features/notifications/queries";
 
 const navItems = [
   { to: "/overview", label: "Overview" },
@@ -12,6 +14,28 @@ const navItems = [
 ];
 
 const Header = () => {
+  const { notifications } = useNotifications();
+
+  let unreadNotifications = notifications.filter(
+    (notifications) => notifications.read === false,
+  );
+
+  const createInitials = () => {
+    const name = useAuthStore.getState().user?.username;
+    if (!name) return "";
+
+    const parts = name.split(" ").filter(Boolean);
+
+    if (parts.length === 2) {
+      return parts
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase();
+    }
+
+    return parts[0]?.[0]?.toUpperCase() ?? "";
+  };
+
   const handleLoguot = () => {
     useAuthStore.getState().logout();
   };
@@ -22,8 +46,8 @@ const Header = () => {
         <span className={styles.header}>
           <span className={styles.headerLogo}>SRI</span>
           <div className={styles.headerTextContainer}>
-            <div className={styles.headerText}>Lab Portal</div>
-            <span className={styles.headerSubText}>
+            <div className={commonStyles.boldGolosText}>Lab portal</div>
+            <span className={commonStyles.smallThinText}>
               Scientific Research Institute
             </span>
           </div>
@@ -38,15 +62,15 @@ const Header = () => {
             />
           </button>
 
-          <span className={styles.userSymbols}>АИ</span>
+          <span className={styles.userSymbols}>{createInitials()}</span>
 
           <div className={styles.profileTextBlock}>
-            <p className={styles.userNameText}>
+            <p className={commonStyles.boldGolosText}>
               {useAuthStore.getState().user?.username}
             </p>
-            <p className={styles.userRole}>
+            <p className={commonStyles.smallThinText}>
               {useAuthStore.getState().user?.role} ·{" "}
-              <span className={styles.userLogin}>
+              <span className={commonStyles.smallThinTextMono}>
                 {useAuthStore.getState().user?.displayName}
               </span>
             </p>
@@ -57,7 +81,7 @@ const Header = () => {
               width={18}
               height={18}
               strokeWidth={1}
-              color="rgb(96, 93, 93)"
+              color="var(--color-grey)"
             />{" "}
             <span className={styles.logoutButtonText}>Logout</span>
           </button>
@@ -74,6 +98,12 @@ const Header = () => {
               }
             >
               {item.label}
+              {item.label === "Notifications" &&
+                unreadNotifications.length > 0 && (
+                  <div className={styles.unreadNotificationsAmount}>
+                    {unreadNotifications.length}
+                  </div>
+                )}
             </NavLink>
           ))}
         </nav>

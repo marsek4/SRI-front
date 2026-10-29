@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { type UserData, type FullUserData } from "@/types/types";
+import { type User, type FullUserData } from "./types";
 
 type AuthState = {
   accessToken: string | null;
   expiresAt: string | null;
-  user: UserData | null;
+  user: User | null;
   isAuthenticated: () => boolean;
   setAuth: (data: FullUserData) => void;
   logout: () => void;

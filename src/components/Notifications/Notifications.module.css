@@ -24,7 +24,7 @@
 .currentNotificationsHeader {
   /* display: flex;
   gap: 20px; */
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--color-black);
   padding: 10px 0px;
   /* background-color: red; */
 }
@@ -33,7 +33,7 @@
   font-family: "Golos Text";
   font-size: 16px;
   font-weight: 700;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 
   padding: 10px 0px;
   margin-right: 20px;
@@ -41,8 +41,8 @@
 }
 
 .activeFilterOption {
-  border-bottom: 2px solid red;
-  color: #000;
+  border-bottom: 2px solid var(--color-red);
+  color: var(--color-black);
 }
 
 .newNotifications {
@@ -57,7 +57,7 @@
 }
 
 .newNotificationsDescription {
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
   font-size: 14px;
 }
 
@@ -67,33 +67,35 @@
 }
 
 .notificationsDescription {
-  color: rgb(96, 93, 93);
+  font-size: 14px;
+  color: var(--color-grey);
 }
 
-.inputContainer {
+/* .inputContainer {
   display: flex;
   flex-direction: column;
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
-  color: rgb(68, 65, 65);
-}
+  color: var(--color-grey);
+} */
 
 .selectContainer {
   display: flex;
   flex-direction: column;
+
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .selectField {
-  padding: 12px 16px;
-  height: 42px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
-  color: rgb(96, 93, 93);
-  background-color: #fff;
+  display: flex;
+  border: 1px solid var(--color-border);
+  color: var(--color-grey);
+  background-color: var(--color-white);
+
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
@@ -103,14 +105,15 @@
 
 .selectContainerButtons {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .subscribeButton {
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
   font-size: 14px;
-  border: 1px solid #000;
+  border: 1px solid var(--color-black);
   padding: 12px 16px;
   width: 100%;
   display: flex;
@@ -119,40 +122,40 @@
   margin-bottom: 20px;
 }
 
-.inputField {
+/* .inputField {
   padding: 12px 16px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   color: rgb(96, 93, 93);
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
   outline: none;
   transition: border-color 0.3s ease;
-}
+} */
 
-.textareaField {
+/* .textareaField {
   padding: 12px 16px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
-  color: rgb(96, 93, 93);
+  border: 1px solid var(--color-border);
+  color: var(--color-grey);
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
   outline: none;
   transition: border-color 0.3s ease;
   resize: vertical;
-}
+} */
 
-.inputField:hover,
+/* .inputField:hover,
 .inputField:focus,
 .textareaField:hover,
 .textareaField:focus {
-  border: 1px solid red;
-}
+  border: 1px solid var(--color-red);
+} */
 
 .submitButton {
   display: flex;
   justify-content: space-between;
-  background-color: rgb(32, 30, 29);
+  background-color: var(--color-black);
   border: 1px solid transparent;
   padding: 12px 16px;
   width: 100%;
@@ -163,7 +166,7 @@
 }
 
 .buttonText {
-  color: #fff;
+  color: var(--color-white);
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
   font-size: 16px;
@@ -172,7 +175,7 @@
 .buttonArrow {
   width: 20px;
   height: 20px;
-  color: #fff;
+  color: var(--color-white);
   transform: rotate(90deg);
 }
 
@@ -184,36 +187,34 @@
 
 .reminderContainer {
   display: flex;
-  /* justify-content: space-between; */
-  gap: 6px;
+  gap: 2px;
   padding: 16px 24px;
-  border-bottom: 1px solid rgba(32, 30, 29, 0.18);
+  border-bottom: 1px solid var(--color-border);
   font-family: "Golos Text", sans-serif, system-ui;
-  /* background-color: beige; */
 }
 
 .innerContainerTitle {
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .readIndicator {
-  margin: 4px;
-  width: 8px;
-  height: 8px;
+  margin: 2px;
+  width: 10px;
+  height: 10px;
   background-color: transparent;
 }
 
 .readIndicatorVisible {
-  background-color: red;
+  background-color: var(--color-red);
 }
 
 .innerContainer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .firstLineText {
@@ -227,7 +228,7 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 12px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .markReadButton {
@@ -237,7 +238,7 @@
   padding: 6px 12px;
   font-family: "Golos Text", sans-serif, system-ui;
   font-weight: 700;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   background-color: transparent;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -250,6 +251,33 @@
 .reminderText {
   font-family: "Golos Text";
   font-weight: 400;
+  font-size: 14px;
+  color: var(--color-red);
+}
+
+.subContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0px;
+  border-bottom: 1px solid var(--color-grey);
+}
+
+.subLabName {
+  font-family: "Golos Text";
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.subLabName:hover {
+  text-decoration: underline;
+}
+
+.subTopic {
+  font-family: "Golos Text";
+  font-weight: 400;
   font-size: 12px;
-  color: red;
+  color: var(--color-grey);
 }

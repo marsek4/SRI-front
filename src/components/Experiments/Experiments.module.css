@@ -22,14 +22,14 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 34px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .experimentsHeaderSubtext {
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 16px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .newExperimentButton {
@@ -37,7 +37,7 @@
   align-items: center;
   gap: 10px;
   height: fit-content;
-  background-color: red;
+  background-color: var(--color-red);
   padding: 12px 16px;
   border: none;
   cursor: pointer;
@@ -45,7 +45,7 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #fff;
+  color: var(--color-white);
 }
 
 .arrow {
@@ -57,7 +57,7 @@
 .modePanel {
   gap: 20px;
   padding: 10px 0px;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--color-black);
   cursor: pointer;
 }
 
@@ -65,7 +65,7 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 
   margin-right: 20px;
   padding: 10px 0px;
@@ -73,13 +73,13 @@
 }
 
 .isModeActive {
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid var(--color-red);
   color: #000;
 }
 
 .filterSection {
   padding: 20px 0px;
-  border-bottom: 1px solid rgba(32, 30, 29, 0.45);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .inputRow {
@@ -96,24 +96,24 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .inputField {
   padding: 12px 16px;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   background-color: transparent;
   outline: none;
 
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 16px;
-  color: rgba(32, 30, 29);
+  color: var(--color-black);
 }
 
 .inputField:hover,
 .inputField:focus {
-  border: 1px solid red;
+  border: 1px solid var(--color-red);
 }
 
 .searchButton {
@@ -123,30 +123,65 @@
   height: fit-content;
   padding: 10px 12px;
   border: 1px solid transparent;
-  background-color: rgba(32, 30, 29);
+  background-color: var(--color-black);
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: rgb(243, 242, 242);
+  color: var(--color-white);
   cursor: pointer;
 }
 
 .searchIcon {
   width: 16px;
   height: 16px;
-  color: rgb(243, 242, 242);
+  color: var(--color-white);
 }
 
 .resetButton {
   height: fit-content;
   padding: 10px 12px;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   background-color: transparent;
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: rgb(32, 30, 29);
+  color: var(--color-black);
   cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  max-width: 1170px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.tableHeadRow {
+  border-bottom: 2px solid var(--color-black);
+}
+
+.tableHeadCell {
+  text-align: left;
+  padding: 8px 12px;
+
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-grey);
+  letter-spacing: 0.08em;
+}
+
+.tableBodyRow {
+  border-bottom: 1px solid var(--color-grey);
+}
+
+.tableBodyCell {
+  text-align: left;
+  padding: 12px;
+
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 14px;
 }

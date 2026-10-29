@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./Calendar.module.css";
 import type { LabSchedule } from "@/features/laboratories/types";
-import type { Booking } from "@/features/bookings/types";
 
 type Day = {
   label: string;
@@ -28,6 +26,9 @@ const HOURS = [
   "21:00",
 ];
 
+const formatTime = (d: Date) =>
+  `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+
 const getWeekDays = () => {
   const now = new Date();
   const today = now.getDay();
@@ -52,7 +53,6 @@ const getWeekDays = () => {
 
 type CalendarProps = {
   schedule?: LabSchedule;
-  // bookings?: Booking[];
   onRangeChange: (
     range: { date: string; start: string; end: string } | null,
   ) => void;
@@ -82,7 +82,24 @@ const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
     day.month === now.getMonth() &&
     day.date === now.getDate();
 
-  const isOccupied = (day: Day, hour: string) => {
+  // const isOccupied = (day: Day, hour: string) => {
+  //   if (!schedule) return false;
+  //   const cellStart = new Date(
+  //     day.year,
+  //     day.month,
+  //     day.date,
+  //     parseHour(hour),
+  //     0,
+  //   );
+  //   const cellEnd = new Date(cellStart.getTime() + 60 * 60 * 1000);
+  //   return schedule.busy.some((i) => {
+  //     const start = new Date(i.startTime);
+  //     const end = new Date(i.endTime);
+  //     return cellStart < end && cellEnd > start;
+  //   });
+  // };
+
+  const isOccupiedByMe = (day: Day, hour: string) => {
     if (!schedule) return false;
     const cellStart = new Date(
       day.year,
@@ -92,11 +109,72 @@ const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
       0,
     );
     const cellEnd = new Date(cellStart.getTime() + 60 * 60 * 1000);
+
     return schedule.busy.some((i) => {
+      if (!i.mine) return false;
       const start = new Date(i.startTime);
       const end = new Date(i.endTime);
       return cellStart < end && cellEnd > start;
     });
+  };
+
+  const isOccupiedByOthers = (day: Day, hour: string) => {
+    if (!schedule) return false;
+    const cellStart = new Date(
+      day.year,
+      day.month,
+      day.date,
+      parseHour(hour),
+      0,
+    );
+    const cellEnd = new Date(cellStart.getTime() + 60 * 60 * 1000);
+
+    return schedule.busy.some((i) => {
+      if (i.mine) return false;
+      const start = new Date(i.startTime);
+      const end = new Date(i.endTime);
+      return cellStart < end && cellEnd > start;
+    });
+  };
+
+  const getMyBooking = (day: Day, hour: string) => {
+    if (!schedule) return null;
+    const cellStart = new Date(
+      day.year,
+      day.month,
+      day.date,
+      parseHour(hour),
+      0,
+    );
+    const cellEnd = new Date(cellStart.getTime() + 60 * 60 * 1000);
+    return (
+      schedule.busy.find((i) => {
+        if (!i.mine) return false;
+        const start = new Date(i.startTime);
+        const end = new Date(i.endTime);
+        return cellStart < end && cellEnd > start;
+      }) ?? null
+    );
+  };
+
+  const getOthersBooking = (day: Day, hour: string) => {
+    if (!schedule) return null;
+    const cellStart = new Date(
+      day.year,
+      day.month,
+      day.date,
+      parseHour(hour),
+      0,
+    );
+    const cellEnd = new Date(cellStart.getTime() + 60 * 60 * 1000);
+    return (
+      schedule.busy.find((i) => {
+        if (i.mine) return false;
+        const start = new Date(i.startTime);
+        const end = new Date(i.endTime);
+        return cellStart < end && cellEnd > start;
+      }) ?? null
+    );
   };
 
   const parseHourFromKey = (key: string) => {
@@ -200,7 +278,30 @@ const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
             const key = cellKey(day, hour);
             const selected = selectedCells.has(key);
             const past = isPast(day, hour);
-            const occupied = isOccupied(day, hour);
+            const myBooking = getMyBooking(day, hour);
+
+            const myStart = myBooking ? new Date(myBooking.startTime) : null;
+            const isMyBookingStart =
+              myStart !== null &&
+              myStart.getFullYear() === day.year &&
+              myStart.getMonth() === day.month &&
+              myStart.getDate() === day.date &&
+              myStart.getHours() === parseHour(hour);
+
+            const otherBooking = getOthersBooking(day, hour);
+            const otherStart = otherBooking
+              ? new Date(otherBooking.startTime)
+              : null;
+            const isOtherBookingStart =
+              otherStart !== null &&
+              otherStart.getFullYear() === day.year &&
+              otherStart.getMonth() === day.month &&
+              otherStart.getDate() === day.date &&
+              otherStart.getHours() === parseHour(hour);
+
+            const occupiedByOthers = isOccupiedByOthers(day, hour);
+            const occupiedByMe = isOccupiedByMe(day, hour);
+            const isOccupied = occupiedByMe || occupiedByOthers;
             const hourNum = parseHour(hour);
             const showLabel =
               range &&
@@ -212,18 +313,45 @@ const Calendar = ({ schedule, onRangeChange }: CalendarProps) => {
               <div
                 key={hour}
                 onMouseDown={() =>
-                  !past && !occupied && handleMouseDown(day, key)
+                  !past && !isOccupied && handleMouseDown(day, key)
                 }
-                onMouseEnter={() => !past && !occupied && handleMouseEnter(key)}
-                className={`${styles.calendarDayCell} ${
-                  past ? styles.calendarPastDayCell : ""
-                } ${occupied ? styles.calendarOccupiedCell : ""} ${
-                  selected ? styles.calendarSelectedCell : ""
-                }`}
+                onMouseEnter={() =>
+                  !past && !isOccupied && handleMouseEnter(key)
+                }
+                className={[
+                  styles.calendarDayCell,
+                  past && styles.calendarPastDayCell,
+                  occupiedByOthers && styles.calendarOccupiedByOthers,
+                  occupiedByMe && styles.calendarOccupiedByMe,
+                  selected && styles.calendarSelectedCell,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
               >
                 {showLabel && (
                   <span className={styles.selectionLabel}>
                     {formatHour(range.start)} – {formatHour(range.end)}
+                  </span>
+                )}
+                {isMyBookingStart && (
+                  <span className={styles.bookingLabel}>
+                    <span className={styles.bookingLabelTitle}>
+                      Your booking
+                    </span>
+                    <span className={styles.bookingLabelTime}>
+                      {formatTime(new Date(myBooking!.startTime))} –{" "}
+                      {formatTime(new Date(myBooking!.endTime))}
+                    </span>
+                  </span>
+                )}
+
+                {isOtherBookingStart && (
+                  <span className={styles.bookingLabel}>
+                    <span className={styles.bookingLabelTitle}>Booked</span>
+                    <span className={styles.bookingLabelTime}>
+                      {formatTime(new Date(otherBooking!.startTime))} –{" "}
+                      {formatTime(new Date(otherBooking!.endTime))}
+                    </span>
                   </span>
                 )}
               </div>

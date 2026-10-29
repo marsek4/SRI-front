@@ -17,14 +17,14 @@
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 12px;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .overviewWelcomeText {
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 34px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .overviewButtonMenu {
@@ -35,36 +35,36 @@
 .newExpButton {
   padding: 12px 16px;
   background-color: transparent;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black);
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
 .newExpButton:hover {
-  background-color: rgb(223, 220, 220);
+  background-color: var(--color-background);
 }
 
 .bookingButton {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background-color: red;
+  background-color: var(--color-red);
   border: 1px solid transparent;
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #fff;
+  color: var(--color-white);
   cursor: pointer;
 }
 
 .moveUp {
-  color: #fff;
+  color: var(--color-white);
   width: 20px;
   height: 20px;
   transform: rotate(90deg);
@@ -79,12 +79,11 @@
 }
 
 .infoSection {
-  /* background-color: rgb(112, 112, 49); */
   display: flex;
   width: 100%;
   flex-direction: column;
   padding: 20px 0px;
-  border-top: 2px solid #000;
+  border-top: 2px solid var(--color-black);
 }
 
 .infoSectionHeader {
@@ -93,47 +92,86 @@
   justify-content: space-between;
 }
 
-.infoSectionTitle {
-  font-family: "Golos Text";
-  font-weight: 700;
-  font-size: 18px;
-}
-
 .infoSectionLink {
   text-decoration: underline;
-  color: red;
+  color: var(--color-red);
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
 }
 
+.experimentContainer {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 10px 0px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.experimentTitle {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-black);
+}
+
+.experimentStatusPlanned {
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-black);
+  letter-spacing: 0.06em;
+
+  padding: 4px 8px;
+  width: fit-content;
+  height: fit-content;
+  border: 2px solid var(--color-border);
+  text-transform: uppercase;
+}
+
+.experimentBottomTextContainer {
+  display: flex;
+  /* gap: 14px; */
+}
+
+.experimentText {
+  color: var(--color-grey);
+  font-size: 12px;
+}
+
+.experimentStatusGoing {
+}
+
+.experimentStatusPast {
+}
+
 .unreadNotification {
   display: flex;
   gap: 10px;
   padding: 12px 10px;
-  border-bottom: 1px solid rgba(32, 30, 29, 0.45);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .reminderDescription {
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 13px;
-  color: rgba(32, 30, 29, 0.45);
+  color: var(--color-border);
 }
 
 .reminderTitle {
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 14px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .reminderButton {
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 13px;
-  color: red;
+  color: var(--color-red);
   text-decoration: underline;
   width: fit-content;
   background-color: transparent;
@@ -143,8 +181,15 @@
 }
 
 .redBlock {
-  margin: 4px;
-  width: 8px;
-  height: 8px;
-  background-color: red;
+  aspect-ratio: 1/1;
+  margin: 14px 4px 4px 4px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-red);
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

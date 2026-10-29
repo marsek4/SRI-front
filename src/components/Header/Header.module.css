@@ -1,11 +1,9 @@
 .headerContainer {
   display: flex;
-  /* max-height: 60px; */
   max-width: 100%;
   align-items: center;
-  padding: 0px 50px;
+  padding: 20px 50px 0px 50px;
   box-sizing: border-box;
-  /* background-color: aqua; */
 }
 
 .header {
@@ -27,7 +25,7 @@
   font-weight: 700;
   display: flex;
   align-items: flex-end;
-  background-color: red;
+  background-color: var(--color-red);
   font-family: "Golos Text", system-ui, sans-serif;
 }
 
@@ -36,13 +34,13 @@
 
 .headerText {
   font-size: 12px;
-  color: rgb(32, 30, 29);
+  color: var(--color-black);
   font-family: "Golos Text", system-ui, sans-serif;
 }
 
 .headerSubText {
   font-size: 12px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
   font-family: "Golos Text", system-ui, sans-serif;
 }
 
@@ -58,9 +56,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 0px;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-grey);
   aspect-ratio: 1/1;
-  /* height: 40px; */
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -69,11 +66,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 40px; */
   height: 40px;
   aspect-ratio: 1 / 1;
-  background-color: rgb(32, 30, 29);
-  color: #fff;
+  background-color: var(--color-black);
+  color: var(--color-white);
   font-size: 13px;
   font-family: "Golos Text", sans-serif, system-ui;
   font-weight: 700;
@@ -86,7 +82,7 @@
 }
 
 .userNameText {
-  color: rgb(32, 30, 29);
+  color: var(--color-black);
   font-size: 14px;
   font-weight: 700;
 }
@@ -94,7 +90,7 @@
 .userRole,
 .userLogin {
   font-size: 12px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .userLogin {
@@ -109,42 +105,59 @@
   justify-content: center;
   gap: 10px;
   padding: 0px 8px;
-  border: 1px solid rgba(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   cursor: pointer;
 }
 
 .logoutButtonText {
-  color: rgb(32, 30, 29);
+  color: var(--color-black);
   font-family: "Golos Text", sans-serif, system-ui;
   font-size: 14px;
   font-weight: 700;
 }
 
 .navbar {
+  display: flex;
   width: 100%;
-  height: fit-content;
-  border-bottom: 2px solid rgb(32, 30, 29);
-  padding: 12px 50px;
+  /* height: fit-content; */
+  border-bottom: 2px solid var(--color-black);
+  padding: 0px 50px;
+  margin-bottom: -2px;
 }
 
 .navbarItem {
+  display: flex;
+  gap: 10px;
+  box-sizing: border-box;
+  margin-right: 20px;
+  padding: 10px 0px 10px;
+  cursor: pointer;
+
+  text-decoration: none;
   font-family: "Golos Text", sans-serif, system-ui;
   font-size: 14px;
-  font-weight: 700;
-  margin-right: 20px;
-  color: rgb(96, 93, 93);
-  cursor: pointer;
-  transition: border-bottom-color 0.3s ease;
-  padding: 13px 4px;
-  text-decoration: none;
-}
-
-.navbarItem:hover {
-  background-color: rgba(96, 93, 93, 0.45);
+  font-weight: 500;
+  color: var(--color-grey);
 }
 
 .navbarItemActive {
-  border-bottom: 2px solid red;
-  /* padding: 12px 0px; */
-  color: rgb(32, 30, 29);
+  gap: 10px;
+  display: flex;
+  color: var(--color-black);
+  border-bottom: 2px solid var(--color-red);
+  margin-bottom: -2px;
+}
+
+.unreadNotificationsAmount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-red);
+
+  color: var(--color-white);
+  font-family: "Golos Text";
+  font-weight: 700;
+  font-size: 12px;
 }

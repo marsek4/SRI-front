@@ -1,13 +1,17 @@
 import { MoveUp } from "lucide-react";
 import styles from "./Overview.module.css";
+import commonStyles from "@/styles/shared.module.css";
 // import { useNotifications } from "@/hooks/useNotifications";
 import { useNotifications } from "@/features/notifications/queries";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useNotificationRead } from "@/features/notifications/mutations";
+import { useExperiments } from "@/features/experiments/queries";
+import { formatDateTime } from "@/utils/utils";
 
 const Overview = () => {
   const markRead = useNotificationRead();
+  const experiments = useExperiments();
 
   const navigate = useNavigate();
 
@@ -26,33 +30,71 @@ const Overview = () => {
       <section className={styles.overviewHeader}>
         <div>
           <p className={styles.overviewDateText}>Tuesday, 13 of October</p>
-          <h1 className={styles.overviewWelcomeText}>
+          <h1 className={commonStyles.sectionHeaderText}>
             Welcome, {useAuthStore.getState().user?.username}
           </h1>
         </div>
         <div className={styles.overviewButtonMenu}>
-          <button className={styles.newExpButton}>New experiment</button>
-          <button className={styles.bookingButton}>
-            Book a laboratory <MoveUp className={styles.moveUp} />
+          <button
+            className={commonStyles.transparentButton}
+            onClick={() => navigate("/experiments/new-experiment")}
+          >
+            New experiment
+          </button>
+          <button
+            className={commonStyles.redButtonWithArrow}
+            onClick={() => navigate("/laboratories")}
+          >
+            Book a laboratory <MoveUp className={commonStyles.redButtonArrow} />
           </button>
         </div>
       </section>
       <section className={styles.infoSectionContainer}>
         <section className={styles.infoSection}>
           <header className={styles.infoSectionHeader}>
-            <h2 className={styles.infoSectionTitle}>Nearest bookings</h2>
-            <p className={styles.infoSectionLink}>All bookings</p>
+            <h2 className={commonStyles.smallHeaderText}>Nearest bookings</h2>
+            <p
+              className={styles.infoSectionLink}
+              onClick={() => navigate("/my-bookings")}
+            >
+              All bookings
+            </p>
           </header>
         </section>
         <section className={styles.infoSection}>
           <header className={styles.infoSectionHeader}>
-            <h2 className={styles.infoSectionTitle}>My experiments</h2>
-            <p className={styles.infoSectionLink}>All experiments</p>
+            <h2 className={commonStyles.smallHeaderText}>My experiments</h2>
+            <p
+              className={styles.infoSectionLink}
+              onClick={() => navigate("/experiments")}
+            >
+              All experiments
+            </p>
           </header>
+          {experiments.experiments.map((exp) => (
+            <div key={exp.id} className={styles.experimentContainer}>
+              <div className={styles.experimentTitle}>{exp.title}</div>
+              <div
+                className={`${exp.status === "EXPERIMENT_STATUS_PLANNED" ? styles.experimentStatusPlanned : ""}`}
+              >
+                {exp.status === "EXPERIMENT_STATUS_PLANNED"
+                  ? "PLANNED"
+                  : "other status"}
+              </div>
+              <div className={styles.experimentBottomTextContainer}>
+                <p className={styles.experimentText}>
+                  {exp.labId} · {exp.createdAt}
+                </p>
+                {/* <p className={styles.experimentDate}>{exp.createdAt}</p> */}
+              </div>
+            </div>
+          ))}
         </section>
         <section className={styles.infoSection}>
           <header className={styles.infoSectionHeader}>
-            <h2 className={styles.infoSectionTitle}>Unread notifications</h2>
+            <h2 className={commonStyles.smallHeaderText}>
+              Unread notifications
+            </h2>
             <p
               className={styles.infoSectionLink}
               onClick={() => navigate("/notifications")}
@@ -65,7 +107,7 @@ const Overview = () => {
               <div className={styles.redBlock}></div>
               <div className={styles.textContainer}>
                 <p className={styles.reminderDescription}>
-                  {notification.remindAt}
+                  {formatDateTime(notification.remindAt)}
                 </p>
                 <p className={styles.reminderTitle}>{notification.title}</p>
                 <button

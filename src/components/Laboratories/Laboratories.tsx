@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Laboratories.module.css";
+import commonStyles from "@/styles/shared.module.css";
 import Calendar from "./Calendar/Calendar";
 import { MoveUp, Bell } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,10 +10,14 @@ import {
   useLabSchedule,
 } from "@/features/laboratories/queries";
 import { useCreateBooking } from "@/features/bookings/mutation";
+import { useSubscribe } from "@/features/subscriptions/mutations";
 // import { useBooking } from "@/features/bookings/queries";
 
 const Laboratories = () => {
   const navigate = useNavigate();
+  const createBookingMutation = useCreateBooking();
+  const subscribe = useSubscribe();
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [dateValue, setDateValue] = useState<string>("");
   const [beginning, setBeginning] = useState<string>("");
@@ -34,7 +39,6 @@ const Laboratories = () => {
     setEnd(range.end);
   };
 
-  const createBookingMutation = useCreateBooking();
   // const { booking } = useBooking();
 
   const handleCreateBooking = () => {
@@ -52,6 +56,11 @@ const Laboratories = () => {
         onSuccess: () => resetBooking(),
       },
     );
+  };
+
+  const handleSubscription = (labId: string) => {
+    const topic = "lab:" + labId;
+    subscribe.mutate({ topic: topic });
   };
 
   const resetBooking = () => {
@@ -89,13 +98,13 @@ const Laboratories = () => {
           <div className={styles.labDescription}>
             <p className={styles.labId}>{lab.id}</p>
             <h1 className={styles.labHeader}>{lab.name}</h1>
-            <span className={styles.labAddress}>
-              {lab.building} <span>The lab fits {lab.capacity} people</span>
+            <span className={commonStyles.sectionHeaderText}>
+              {lab.building} <p>The lab fits {lab.capacity} people</p>
             </span>
           </div>
           <button
             type="button"
-            onClick={() => console.log("sub")}
+            onClick={() => handleSubscription(labId)}
             className={styles.subButton}
           >
             <Bell className={styles.bell} />
@@ -118,6 +127,45 @@ const Laboratories = () => {
               ))}
             </ul>
           </div>
+        </section>
+        <section className={styles.calendarInstruction}>
+          <span className={styles.calendarInstructionItem}>
+            <div
+              className={[styles.calendarInstructionColor, styles.booked].join(
+                " ",
+              )}
+            ></div>
+            <span className={styles.calendarInstructionText}>Booked</span>
+          </span>
+          <span className={styles.calendarInstructionItem}>
+            <div
+              className={[
+                styles.calendarInstructionColor,
+                styles.yourBooking,
+              ].join(" ")}
+            ></div>
+            <span className={styles.calendarInstructionText}>Your booking</span>
+          </span>
+          <span className={styles.calendarInstructionItem}>
+            <div
+              className={[
+                styles.calendarInstructionColor,
+                styles.choosenInterval,
+              ].join(" ")}
+            ></div>
+            <span className={styles.calendarInstructionText}>
+              Choosen interval
+            </span>
+          </span>
+          <span className={styles.calendarInstructionItem}>
+            <div
+              className={[
+                styles.calendarInstructionColor,
+                styles.pastTime,
+              ].join(" ")}
+            ></div>
+            <span className={styles.calendarInstructionText}>Past time</span>
+          </span>
         </section>
         <section className={styles.calendarSection}>
           <div className={styles.calendarContainer}>
@@ -200,8 +248,8 @@ const Laboratories = () => {
     <div className={styles.labContainer}>
       <section className={styles.labHeaderContainer}>
         <div className={styles.labHeaderText}>
-          <h1 className={styles.labHeaderTitle}>Laboratories</h1>
-          <p className={styles.labHeaderSubtext}>
+          <h1 className={commonStyles.sectionHeaderText}>Laboratories</h1>
+          <p className={commonStyles.sectionHeaderSubText}>
             Catalog of rooms and equipment. Open a laboratory to view
             availability and make a reservation.
           </p>
@@ -231,7 +279,7 @@ const Laboratories = () => {
           >
             <>
               <p className={styles.labId}>{lab.id}</p>
-              <h2 className={styles.labName}>{lab.name}</h2>
+              <h2 className={commonStyles.smallHeaderText}>{lab.name}</h2>
               <p className={styles.labAddress}>{lab.building}</p>
               <ul className={styles.labEquipmentList}>
                 {lab.equipment.map((item) => (

@@ -2,25 +2,60 @@ import styles from "./NewExperiment.module.css";
 import { useNavigate } from "react-router-dom";
 import { MoveUp } from "lucide-react";
 import { useState } from "react";
+import { useNewExperiment } from "@/features/experiments/mutations";
+import { useLabs } from "@/features/laboratories/queries";
+import type { NewExperiment } from "@/features/experiments/types";
 
 type PrivacyMode = "private" | "public";
 
 const NewExperiment = () => {
-  const [name, setName] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [tags, setTags] = useState<string>("");
-  const [mode, setMode] = useState<PrivacyMode>("private");
-  const [samples, setSamples] = useState<string>("");
-  const [results, setResults] = useState<string>("");
-  const [labMagazine, setLabMagazine] = useState<string>("");
+  const [visibilityMode, setVisibilityMode] = useState<PrivacyMode>("private");
+  const [sampleCount, setSampleCount] = useState<string>("");
+  const [summary, setSummary] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
+  const [labId, setLabId] = useState<string>("");
 
   const navigate = useNavigate();
+  const createNewExperiment = useNewExperiment();
+  const labs = useLabs();
+
+  const resetForm = () => {
+    setTitle("");
+    setTags("");
+    setVisibilityMode("private");
+    setSampleCount("");
+    setSummary("");
+    setNotes("");
+    setLabId("");
+  };
+
+  const handleCreateNewExperiment = () => {
+    const samples = Number(sampleCount);
+    const payload: NewExperiment = {
+      title: title,
+      labId: labId,
+      visibility:
+        visibilityMode === "private"
+          ? "VISIBILITY_PRIVATE"
+          : "VISIBILITY_PUBLIC",
+      tags: tags
+        .split(",")
+        .map((i) => i.trim())
+        .filter(Boolean),
+      sampleCount: samples,
+      summary: summary,
+      notes: notes,
+    };
+
+    createNewExperiment.mutate(payload, {
+      onSuccess: () => resetForm(),
+    });
+  };
 
   const handleBack = () => {
     navigate("/experiments");
-  };
-
-  const handleCreateExperiment = () => {
-    console.log("qwe");
   };
 
   const handleCancel = () => {
@@ -45,13 +80,13 @@ const NewExperiment = () => {
         <label className={styles.inputContainer}>
           <span className={styles.textContainer}>
             <p className={styles.text}>Name *</p>
-            <p className={styles.textCounter}>{name.length} / 128</p>
+            <p className={styles.textCounter}>{title.length} / 128</p>
           </span>
           <input
             type="text"
-            value={name}
+            value={title}
             maxLength={128}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             className={styles.input}
           />
         </label>
@@ -61,22 +96,31 @@ const NewExperiment = () => {
             <span className={styles.textContainer}>
               <p className={styles.text}>Laboratory *</p>
             </span>
-            <select className={styles.inputOne}>
+            <select
+              className={styles.inputOne}
+              value={labId}
+              onChange={(e) => setLabId(e.target.value)}
+            >
               <option value="">Choose a lab</option>
+              {labs.labs.map((lab) => (
+                <option key={lab.id} value={lab.id}>
+                  {lab.name}
+                </option>
+              ))}
             </select>
           </label>
           <div className={styles.visibilityContainer}>
             <p className={styles.text}>Visibility</p>
             <span className={styles.visibilityOptionsContainer}>
               <div
-                className={`${styles.visibilityOption} ${mode === "private" ? styles.visibilityOptionActive : ""}`}
-                onClick={() => setMode("private")}
+                className={`${styles.visibilityOption} ${visibilityMode === "private" ? styles.visibilityOptionActive : ""}`}
+                onClick={() => setVisibilityMode("private")}
               >
                 Private
               </div>
               <div
-                className={`${styles.visibilityOption} ${mode === "public" ? styles.visibilityOptionActive : ""}`}
-                onClick={() => setMode("public")}
+                className={`${styles.visibilityOption} ${visibilityMode === "public" ? styles.visibilityOptionActive : ""}`}
+                onClick={() => setVisibilityMode("public")}
               >
                 Public
               </div>
@@ -105,8 +149,8 @@ const NewExperiment = () => {
           <p className={styles.text}>Number of examples</p>
           <input
             type="text"
-            value={samples}
-            onChange={(e) => setSamples(e.target.value)}
+            value={sampleCount}
+            onChange={(e) => setSampleCount(e.target.value)}
             className={styles.inputOne}
           />
         </label>
@@ -115,16 +159,16 @@ const NewExperiment = () => {
         <label className={styles.textareaContainer}>
           <p className={styles.text}>Results</p>
           <textarea
-            value={results}
-            onChange={(e) => setResults(e.target.value)}
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
             className={styles.inputTextarea}
           />
         </label>
         <label className={styles.textareaContainer}>
           <p className={styles.text}>Laboratory notebook</p>
           <textarea
-            value={labMagazine}
-            onChange={(e) => setLabMagazine(e.target.value)}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
             className={styles.inputTextarea}
           />
         </label>
@@ -139,9 +183,10 @@ const NewExperiment = () => {
           <button
             type="button"
             className={styles.createButton}
-            onClick={handleCreateExperiment}
+            onClick={handleCreateNewExperiment}
+            disabled={createNewExperiment.isPending}
           >
-            Create experiment
+            {createNewExperiment.isPending ? "Creating" : "Create experiment"}
             <MoveUp className={styles.arrowForward} />
           </button>
           <button

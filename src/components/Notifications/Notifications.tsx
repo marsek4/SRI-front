@@ -1,77 +1,65 @@
-import { useState } from "react";
 import styles from "./Notifications.module.css";
-import { MoveUp, X } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/authStore";
+import commonStyles from "@/styles/shared.module.css";
+import LabelInput from "../SharedComponents/LabelInput";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MoveUp } from "lucide-react";
 import { useNotifications } from "@/features/notifications/queries";
 import { useNotificationRead } from "@/features/notifications/mutations";
-import { type Reminder } from "@/features/reminders/types";
+import { useLabs } from "@/features/laboratories/queries";
+import { useSubscribe } from "@/features/subscriptions/mutations";
+import { useSubscriptions } from "@/features/subscriptions/queries";
+import { useCreateReminder } from "@/features/reminders/mutations";
+import { useDeleteSubscription } from "@/features/subscriptions/mutations";
+import { formatDateTime } from "@/utils/utils";
 
 type NotificationType = "all" | "unread";
 
 const conformity: Record<string, string> = {
-  NOTIFICATION_KIND_BOOKING: "BOOKING",
-  NOTIFICATION_KIND_REMINDER: "REMINDER",
-  NOTIFICATION_KIND_SYSTEM: "SYSTEM",
+  NOTIFICATION_KIND_BOOKING: "BOOKING ",
+  NOTIFICATION_KIND_REMINDER: "REMINDER ",
+  NOTIFICATION_KIND_SYSTEM: "SYSTEM ",
+  NOTIFICATION_KIND_EXPERIMENT: "EXPERIMENT ",
 };
 
 const Notifications = () => {
-  const qc = useQueryClient();
+  const navigate = useNavigate();
 
   const markRead = useNotificationRead();
+  const createReminder = useCreateReminder();
+  const deleteSubscription = useDeleteSubscription();
 
-  // const {
-  //   subscriptions,
-  //   isLoading: isSubscriptionsLoading,
-  //   isError: isSubscriptionsError,
-  //   error: errorSubscriptions,
-  // } = useSubscriptions();
-  const {
-    notifications,
-    unreadCount,
-    isLoading: isNotificationsLoading,
-    isError: isNotificationsError,
-    error: errorNotifications,
-  } = useNotifications();
+  const { notifications } = useNotifications();
+  const { labs } = useLabs();
+  const { subscriptions } = useSubscriptions();
+  const subscribeToLab = useSubscribe();
 
   const [notificationFilter, setNotificationFilter] =
     useState<NotificationType>("all");
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [remindAt, setRemindAt] = useState<string>();
+  const [selectedLab, setSelectedLab] = useState<string>("");
 
-  const mutationReminders = useMutation({
-    mutationFn: async (data: Reminder) => {
-      const token = useAuthStore.getState().accessToken;
-      const res = await fetch("/api/v1/reminders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify(data),
-      });
+  const handleSubscribe = () => {
+    const correctName = "lab:" + selectedLab;
+    if (selectedLab) {
+      subscribeToLab.mutate({ topic: correctName });
+    }
+  };
 
-      if (!res.ok) {
-        console.log("Ошибка при создании напоминания");
-        return;
-      }
-
-      console.log("Успешное создание напоминания");
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["notifications"] });
-    },
-  });
+  const handleUnsubscribe = (subscriptionId: string) => {
+    deleteSubscription.mutate(subscriptionId);
+  };
 
   const handleNotificationRead = (id: string) => {
     markRead.mutate(id);
   };
 
-  const createReminder = () => {
+  const createNewReminder = () => {
     if (!remindAt) return;
 
-    mutationReminders.mutate({
+    createReminder.mutate({
       title,
       body,
       remindAt: new Date(remindAt).toISOString(),
@@ -81,10 +69,10 @@ const Notifications = () => {
   return (
     <div className={styles.notificationsContainer}>
       <header className={styles.notificationHeaderContainer}>
-        <h1 className={styles.notificationsHeaders}>Notifications</h1>
-        <p className={styles.notificationsDescription}>
+        <h1 className={commonStyles.sectionHeaderText}>Notifications</h1>
+        <p className={commonStyles.sectionHeaderSubText}>
           {" "}
-          System messages, booking and experiment events, personal reminders.
+          System messages, booking and experiment events, personal reminders
         </p>
       </header>
       <div className={styles.notificationsPanel}>
@@ -115,16 +103,19 @@ const Notifications = () => {
                     {" "}
                     <span className={styles.notificationTypeText}>
                       {conformity[item.kind].toUpperCase()}
+                      {item.kind === "SYSTEM" && <span>{item.id}</span>}
+                      <span>
+                        {formatDateTime(item.createdAt).toUpperCase()}
+                      </span>
                     </span>
-                    <span>YESTERDAY, 11:11AM</span>
                   </div>
                   <span className={styles.innerContainerTitle}>
                     {item.title}
                   </span>
-                  <span>{item.topic}</span>
+                  <span>{item.body}</span>
                   {item.remindAt && (
                     <span className={styles.reminderText}>
-                      Remind at: {item.remindAt}
+                      Remind at: {formatDateTime(item.remindAt)}
                     </span>
                   )}
                 </div>
@@ -152,9 +143,12 @@ const Notifications = () => {
                     <div className={styles.firstLineText}>
                       {" "}
                       <span className={styles.notificationTypeText}>
-                        {conformity[item.kind].toUpperCase()}
+                        {conformity[item.kind]}
+                        {item.kind === "SYSTEM" && <span>{item.id}</span>}
                       </span>
-                      <span>YESTERDAY, 11:11AM</span>
+                      <span>
+                        {formatDateTime(item.createdAt).toUpperCase()}
+                      </span>
                     </div>
                     <span className={styles.innerContainerTitle}>
                       {item.title}
@@ -181,23 +175,15 @@ const Notifications = () => {
         <section className={styles.newNotifications}>
           <h2 className={styles.newNotificationsHeader}>New reminder</h2>
           <p className={styles.notificationsDescription}>Visible only to you</p>
-          <label className={styles.inputContainer}>
-            Title{" "}
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className={styles.inputField}
-            />
-          </label>
-          <label className={styles.inputContainer}>
-            Text{" "}
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              className={styles.textareaField}
-            />
-          </label>
+
+          <LabelInput upperText="Title" value={title} setValue={setTitle} />
+          <LabelInput
+            upperText="Text"
+            isTextarea={true}
+            value={body}
+            setValue={setBody}
+          />
+
           <label className={styles.inputContainer}>
             When to remind{" "}
             <input
@@ -209,7 +195,8 @@ const Notifications = () => {
           </label>
           <button
             type="button"
-            onClick={createReminder}
+            onClick={createNewReminder}
+            // disabled={isPending}
             className={styles.submitButton}
           >
             <p className={styles.buttonText}>Create reminder</p>
@@ -218,27 +205,58 @@ const Notifications = () => {
 
           <section className={styles.labSubscriptionPanel}>
             <div className={styles.firstBlock}>
-              <h2>Laboratory subscriptions</h2>
+              <h2 className={commonStyles.smallHeaderText}>
+                Laboratory subscriptions
+              </h2>
               <p className={styles.notificationsDescription}>
                 Notifications regarding bookings and announcements for selected
                 laboratories
               </p>
-              {/* {subscriptions && subscriptions.length > 0 ? (
-                subscriptions.map((item) => (
-                  <div key={item.id}>{item.topic}</div>
-                ))
-              ) : (
-                <p className={styles.noSubscriptions}>No subscriptions yet</p>
-              )} */}
             </div>
-            {}
+            {subscriptions.map((sub) => (
+              <div className={styles.subContainer} key={sub.id}>
+                <div>
+                  <p
+                    className={styles.subLabName}
+                    onClick={() =>
+                      navigate(`/laboratories/${sub.topic.slice(4)}`)
+                    }
+                  >
+                    {sub.labName}
+                  </p>
+                  <p className={styles.subTopic}>{sub.topic}</p>
+                </div>
+
+                <button
+                  type="button"
+                  className={commonStyles.transparentButton}
+                  onClick={() => handleUnsubscribe(sub.id)}
+                >
+                  Unsubscribe
+                </button>
+              </div>
+            ))}
             <label className={styles.selectContainer}>
               Add subscription{" "}
               <div className={styles.selectContainerButtons}>
-                <select className={styles.selectField}>
+                <select
+                  className={styles.selectField}
+                  value={selectedLab}
+                  onChange={(e) => setSelectedLab(e.target.value)}
+                >
                   <option>Choose a lab</option>
+                  {labs.map((lab) => (
+                    <option key={lab.id} value={lab.id}>
+                      {lab.name}
+                    </option>
+                  ))}
                 </select>
-                <button className={styles.subscribeButton}>Subscribe</button>
+                <button
+                  className={commonStyles.transparentButton}
+                  onClick={handleSubscribe}
+                >
+                  Subscribe
+                </button>
               </div>
             </label>
           </section>

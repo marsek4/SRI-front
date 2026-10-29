@@ -1,7 +1,6 @@
 .labContainer {
   display: flex;
   flex-direction: column;
-  /* background-color: aqua; */
   align-items: center;
   justify-content: center;
 }
@@ -10,31 +9,24 @@
   display: flex;
   width: 1170px;
   justify-content: space-between;
-  border-bottom: 2px solid rgb(68, 65, 65);
+  border-bottom: 2px solid var(--color-grey);
   padding: 20px 0px;
-}
-
-.labHeaderTitle {
-  font-family: "Golos Text", sans-serif, system-ui;
-  font-size: 34px;
-  font-weight: 700;
 }
 
 .labHeaderSubtext {
   font-family: "Golos Text", sans-serif, system-ui;
   font-size: 16px;
   font-weight: 400;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .inputContainer {
   display: flex;
-  /* flex: 1; */
   flex-direction: column;
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .inputContainerPeriod {
@@ -44,13 +36,13 @@
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .inputField {
   padding: 12px 16px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
-  color: rgb(96, 93, 93);
+  border: 1px solid var(--color-border);
+  color: var(--color-grey);
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
@@ -60,8 +52,8 @@
 
 .textareaField {
   padding: 12px 16px;
-  border: 1px solid rgb(32, 30, 29, 0.45);
-  color: rgb(96, 93, 93);
+  border: 1px solid var(--color-border);
+  color: var(--color-grey);
   font-size: 12px;
   font-family: "Golos Text", sans-serif;
   font-weight: 700;
@@ -74,7 +66,7 @@
 .inputField:focus,
 .textareaField:hover,
 .textareaField:focus {
-  border: 1px solid red;
+  border: 1px solid var(--color-red);
 }
 
 .labStatistic {
@@ -87,7 +79,7 @@
   font-family: "Golos Text";
   font-size: 14px;
   font-weight: 400px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .labOptionsContainer {
@@ -106,7 +98,7 @@
   flex-direction: column;
   justify-content: space-between;
   aspect-ratio: 1 / 1;
-  border: 1px solid rgb(96, 93, 93);
+  border: 1px solid var(--color-grey);
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -119,7 +111,7 @@
 }
 
 .labOption:hover {
-  background-color: rgb(223, 220, 220);
+  background-color: var(--color-white);
 }
 
 .labItem {
@@ -150,8 +142,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 10px;
-  border-top: 1px solid rgb(32, 30, 29, 0.45);
-  color: red;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-red);
   transition:
     background-color 0.3s ease,
     border-top-color 0.3s ease,
@@ -193,7 +185,7 @@
   cursor: pointer;
   padding-top: 20px;
 
-  color: red;
+  color: var(--color-red);
   font-size: 13px;
   font-family: "Golos Text";
   font-weight: 400;
@@ -212,7 +204,7 @@
   width: 100%;
   max-width: 1170px;
   padding: 20px 0px;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--color-black);
 }
 
 .labDescription {
@@ -225,21 +217,21 @@
   font-family: "IBMPlexMono";
   font-weight: 400;
   font-size: 12px;
-  color: rgb(32, 30, 29, 0.45);
+  color: var(--color-border);
 }
 
 .labHeader {
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 34px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .labAddress {
   font-family: "Golos Text";
   font-size: 16px;
   font-weight: 400;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .subButton {
@@ -248,21 +240,21 @@
   justify-content: center;
   gap: 10px;
   height: fit-content;
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   padding: 12px 16px;
   cursor: pointer;
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 14px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .bell {
   width: 18px;
   height: 18px;
   stroke-width: 1px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .subHeader {
@@ -295,8 +287,7 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 14px;
-  color: rgb(96, 93, 93);
-  /* color: rgb(68, 65, 65); */
+  color: var(--color-grey);
 }
 
 .leftPartDescriptionText {
@@ -312,11 +303,11 @@
   gap: 20px;
   width: 100%;
   max-width: 1170px;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--color-black);
 }
 
 .calendarFormContainer {
-  border-top: 2px solid #000;
+  border-top: 2px solid var(--color-black);
   padding: 20px 0px;
   display: flex;
   justify-content: flex-start;
@@ -329,7 +320,7 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .periodPickingContainer {
@@ -340,7 +331,7 @@
 
 .currentChoosenPeriod {
   display: flex;
-  background-color: rgb(234, 233, 233);
+  background-color: var(--color-white);
   align-items: center;
   justify-content: space-between;
 }
@@ -349,11 +340,11 @@
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 12px;
-  color: rgb(68, 65, 65);
+  color: var(--color-grey);
 }
 
 .resetButton {
-  color: red;
+  color: var(--color-red);
   text-decoration: underline;
   border: none;
   background-color: transparent;
@@ -364,7 +355,7 @@
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 12px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
   margin: 0;
 }
 
@@ -373,19 +364,68 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: red;
+  background-color: var(--color-red);
   border: 1px solid transparent;
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #fff;
+  color: var(--color-white);
   cursor: pointer;
 }
 
 .moveUp {
-  color: #fff;
+  color: var(--color-white);
   width: 20px;
   height: 20px;
   transform: rotate(90deg);
+}
+
+.calendarInstruction {
+  display: flex;
+  width: 100%;
+  gap: 40px;
+  padding: 10px 0px;
+}
+
+.calendarInstructionItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendarInstructionColor {
+  width: 16px;
+  height: 16px;
+}
+
+.booked {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(32, 30, 29, 0.16) 0px,
+    rgba(32, 30, 29, 0.16) 2px,
+    rgb(243, 242, 242) 2px,
+    rgb(243, 242, 242) 7px
+  );
+  border: 1px solid var(--color-border);
+}
+
+.yourBooking {
+  background-color: var(--color-black);
+}
+
+.choosenInterval {
+  background-color: var(--color-red);
+}
+
+.pastTime {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-grey);
+}
+
+.calendarInstructionText {
+  font-family: "Golos Text";
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-black);
 }

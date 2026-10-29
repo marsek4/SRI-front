@@ -10,14 +10,14 @@
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black);
 }
 
 .instructionText {
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 14px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .calendarInstruction {
@@ -35,14 +35,14 @@
 .chevron {
   height: 16px;
   width: 16px;
-  color: rgb(32, 30, 29, 0.45);
+  color: var(--color-border);
 }
 
 .backForwardButton {
   font-display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   background-color: transparent;
   padding: 0px 8px;
 }
@@ -51,13 +51,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
   padding: 0px 8px;
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 14px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .calendarColors {
@@ -68,7 +68,7 @@
   font-family: "Golos Text";
   font-weight: 400;
   font-size: 14px;
-  color: rgb(96, 93, 93);
+  color: var(--color-grey);
 }
 
 .colorContainer {
@@ -80,7 +80,6 @@
 .icon {
   width: 14px;
   height: 14px;
-  /* background-color: #000; */
 }
 
 .iconOccupied {
@@ -91,42 +90,42 @@
     rgb(243, 242, 242) 2px,
     rgb(243, 242, 242) 7px
   );
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
 }
 
 .iconYour {
-  background-color: #000;
+  background-color: var(--color-black);
 }
 
 .iconChoosen {
-  background-color: red;
+  background-color: var(--color-red);
 }
 
 .iconPast {
-  background-color: rgb(230, 227, 227);
+  background-color: var(--color-background);
 }
 
 .calendar {
   display: flex;
   width: 100%;
-  border: 1px solid rgb(32, 30, 29, 0.45);
+  border: 1px solid var(--color-border);
 }
 .blankCell {
   height: 52px;
-  border-bottom: 2px solid rgb(32, 30, 29);
+  border-bottom: 2px solid var(--color-black);
 }
 
 .timeCell {
   height: 40px;
   padding: 4px;
-  border-bottom: 1px solid rgb(32, 30, 29, 0.45);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .timeCellText {
   font-family: "IBMPlexMono";
   font-weight: 400;
   font-size: 12px;
-  color: rgb(32, 30, 29, 0.45);
+  color: var(--color-border);
 }
 
 .calendarDayTop {
@@ -135,34 +134,33 @@
   height: 52px;
   min-width: 94px;
   gap: 4px;
-  border-bottom: 2px solid rgb(32, 30, 29);
+  border-bottom: 2px solid var(--color-black);
   /* border-right: 1px solid rgb(32, 30, 29, 0.45); */
 
   font-family: "Golos Text";
   font-weight: 700;
   font-size: 22px;
-  color: rgb(32, 30, 29);
+  color: var(--color-black);
 }
 
 .calendarDay {
   display: flex;
   flex-direction: column;
+  flex: 1 1 96px;
   min-width: 94px;
+  /* width: 116px; */
+  /* width: 100%; */
   flex: 1;
-  border-left: 1px solid rgb(32, 30, 29, 0.45);
+  border-left: 1px solid var(--color-border);
 }
 
 .calendarDayToday {
-  color: red;
-  border-bottom: 2px solid red;
-}
-
-.calendarPastDayCell {
-  background-color: rgb(230, 227, 227);
+  color: var(--color-red);
+  border-bottom: 2px solid var(--color-red);
 }
 
 .calendarDayText {
-  /* padding-left: 5px 5px 0px 0px; */
+  padding-left: 5px 5px 0px 0px;
   padding-left: 5px;
   font-weight: 400;
   font-size: 12px;
@@ -178,12 +176,20 @@
 
 .calendarDayCell {
   height: 40px;
-  border-bottom: 1px solid rgb(32, 30, 29, 0.45);
+  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
   user-select: none;
   box-sizing: border-box;
   flex: 1;
-  min-width: 94px;
+  background-color: var(--color-white);
+
+  /* min-width: 96px; */
+  /* max-width: 116px; */
+}
+
+.calendarPastDayCell {
+  background-color: var(--color-background);
+  /* background-color: red; */
 }
 
 .calendarSelectedCell {
@@ -194,7 +200,7 @@
   content: "";
   position: absolute;
   inset: 0 2.5%;
-  background-color: red;
+  background-color: var(--color-red);
   pointer-events: none;
   padding-bottom: 40px;
 }
@@ -208,6 +214,37 @@
   font-family: "IBMPlexMono";
   font-size: 10px;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-white);
   margin-top: 6px;
+}
+
+.calendarOccupiedByMe {
+  position: relative;
+}
+
+.calendarOccupiedByMe::after {
+  content: "";
+  position: absolute;
+  inset: 0 2.5%;
+  background-color: var(--color-black);
+  pointer-events: none;
+  padding: 40px;
+}
+
+.calendarOccupiedByOthers {
+  position: relative;
+}
+
+.calendarOccupiedByOthers::after {
+  content: "";
+  position: absolute;
+  inset: 0 2.5%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(32, 30, 29, 0.16) 0px,
+    rgba(32, 30, 29, 0.16) 2px,
+    rgb(243, 242, 242) 2px,
+    rgb(243, 242, 242) 7px
+  );
 }

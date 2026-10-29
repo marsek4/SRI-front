@@ -15,9 +15,10 @@ export type Labs = {
   labs: Lab[];
 };
 
-type LabBusyInterval = {
+export type LabBusyInterval = {
   startTime: string;
   endTime: string;
+  mine: boolean;
 };
 
 export type LabSchedule = {
