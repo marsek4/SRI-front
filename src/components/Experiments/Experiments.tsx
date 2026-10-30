@@ -12,14 +12,14 @@ import Table from "@/components/SharedComponents/Table";
 
 type SearchMode = "my" | "institute";
 
-const statusLabels: Record<string, string> = {
-  EXPERIMENT_STATUS_PLANNED: "Planned",
-  EXPERIMENT_STATUS_PAST: "Past",
-  // 'EXPERIMENT_STATUS_PLANNED': 'Plannded',
-};
+// const statusLabels: Record<string, string> = {
+//   EXPERIMENT_STATUS_PLANNED: "Planned",
+//   EXPERIMENT_STATUS_PAST: "Past",
+//   // 'EXPERIMENT_STATUS_PLANNED': 'Plannded',
+// };
 
-const getExperimentStatusLabel = (status: string): string =>
-  statusLabels[status] ?? status;
+// const getExperimentStatusLabel = (status: string): string =>
+//   statusLabels[status] ?? status;
 
 const Experiments = () => {
   const [searchMode, setSearchMode] = useState<SearchMode>("my");
@@ -88,20 +88,9 @@ const Experiments = () => {
                 "UPDATED AT",
               ]}
               variant="experiments"
-              body="q"
+              body={experiments}
             />
             {/* <table className={commonStyles.table}>
-              <thead className={commonStyles.tableHead}>
-                <tr className={commonStyles.tableHeadRow}>
-                  <th className={commonStyles.tableHeadCell}>NAME</th>
-                  <th className={commonStyles.tableHeadCell}>LABORATORY</th>
-                  <th className={commonStyles.tableHeadCell}>STATUS</th>
-                  <th className={commonStyles.tableHeadCell}>VISIBILITY</th>
-                  <th className={commonStyles.tableHeadCell}>OWNER</th>
-                  <th className={commonStyles.tableHeadCell}>SAMPLES</th>
-                  <th className={commonStyles.tableHeadCell}>UPDATED AT</th>
-                </tr>
-              </thead>
               <tbody>
                 {experiments.map((exp) => (
                   <tr key={exp.id} className={commonStyles.tableBodyRow}>

@@ -1,4 +1,6 @@
 import styles from "./Table.module.css";
+import type { Experiment } from "@/features/experiments/types";
+import type { Booking } from "@/features/bookings/types";
 
 // type BookingsForTable = {
 //     time: { start: booking.startTime, end: booking.endTime },
@@ -8,23 +10,32 @@ import styles from "./Table.module.css";
 //     status: booking.status,
 // }
 
+const statusLabels: Record<string, string> = {
+  EXPERIMENT_STATUS_PLANNED: "Planned",
+  EXPERIMENT_STATUS_PAST: "Past",
+  // 'EXPERIMENT_STATUS_PLANNED': 'Plannded',
+};
+
+const getExperimentStatusLabel = (status: string): string =>
+  statusLabels[status] ?? status;
+
 type BaseProp = {
   headRow: string[];
 };
 
 type ExperimentsTableProps = BaseProp & {
   variant: "experiments";
-  body: string;
+  body: Experiment[];
 };
 
 type BookingsTabelProps = BaseProp & {
   variant: "bookings";
-  body: number;
+  body: Booking[];
 };
 
 type TableProps = ExperimentsTableProps | BookingsTabelProps;
 
-const Table = ({ headRow }: TableProps) => {
+const Table = ({ headRow, variant, body }: TableProps) => {
   return (
     <table className={styles.table}>
       <thead className={styles.tableHead}>
@@ -34,6 +45,31 @@ const Table = ({ headRow }: TableProps) => {
           ))}
         </tr>
       </thead>
+      {variant === "bookings"
+        ? body.map((booking) => (
+            <tr key={booking.id}>
+              <td
+                className={styles.tableBodyCell}
+              >{`${booking.startTime} - ${booking.endTime}`}</td>
+              <td className={styles.tableBodyCell}>{booking.id}</td>
+              <td className={styles.tableBodyCell}>{booking.purpose}</td>
+              <td className={styles.tableBodyCell}>{booking.accessNote}</td>
+              <td className={styles.tableBodyCell}>{booking.status}</td>
+            </tr>
+          ))
+        : body.map((exp) => (
+            <tr key={exp.id} className={styles.tableBodyRow}>
+              <td className={styles.tableBodyCell}>{exp.title}</td>
+              <td className={styles.tableBodyCell}>{exp.labId}</td>
+              <td className={styles.tableBodyCell}>
+                {getExperimentStatusLabel(exp.status)}
+              </td>
+              <td className={styles.tableBodyCell}>{exp.visibility}</td>
+              <td className={styles.tableBodyCell}>{exp.ownerUsername}</td>
+              <td className={styles.tableBodyCell}>{exp.sampleCount}</td>
+              <td className={styles.tableBodyCell}>{exp.updatedAt}</td>
+            </tr>
+          ))}
       <tbody>
         {/* {experiments.map((exp) => (
           <tr key={exp.id} className={styles.tableBodyRow}>

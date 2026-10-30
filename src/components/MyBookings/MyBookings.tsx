@@ -39,7 +39,7 @@ const MyBookings = () => {
         <Table
           headRow={["TIME", "LABORATORY", "PURPOSE", "ACCESS", "STATUS"]}
           variant="bookings"
-          body={2}
+          body={bookings}
           // body={bookingsForTable}
         />
       </section>
