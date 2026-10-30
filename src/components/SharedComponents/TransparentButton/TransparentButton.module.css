@@ -1,0 +1,18 @@
+.transparentButton {
+  height: fit-content;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  color: var(--color-grey);
+  transition: background-color 0.3s ease;
+
+  font-family: "Golos Text", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.transparentButton:hover {
+  background-color: var(--color-background);
+}

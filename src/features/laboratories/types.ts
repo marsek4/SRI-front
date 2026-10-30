@@ -7,10 +7,6 @@ export type Lab = {
   description: string;
 };
 
-// export type Labs = {
-//   laboratories: Lab[];
-// };
-
 export type Labs = {
   labs: Lab[];
 };

@@ -4,7 +4,7 @@ type LabelInputProps = {
   upperText: string;
   placeholder?: string;
   isTextarea?: boolean;
-
+  type?: string;
   value: string;
   setValue: (value: string) => void;
 };
@@ -13,6 +13,7 @@ const LabelInput = ({
   upperText,
   placeholder,
   isTextarea = false,
+  type = "text",
   value,
   setValue,
 }: LabelInputProps) => {
@@ -28,7 +29,7 @@ const LabelInput = ({
         />
       ) : (
         <input
-          type="text"
+          type={type}
           value={value}
           placeholder={placeholder}
           onChange={(e) => setValue(e.target.value)}

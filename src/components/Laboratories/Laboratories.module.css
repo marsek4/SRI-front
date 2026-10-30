@@ -9,6 +9,7 @@
   display: flex;
   width: 1170px;
   justify-content: space-between;
+  /* gap: 50px; */
   border-bottom: 2px solid var(--color-grey);
   padding: 20px 0px;
 }
@@ -307,6 +308,7 @@
 }
 
 .calendarFormContainer {
+  height: fit-content;
   border-top: 2px solid var(--color-black);
   padding: 20px 0px;
   display: flex;

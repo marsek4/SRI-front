@@ -1,0 +1,22 @@
+.button {
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: var(--color-red);
+  border: none;
+  cursor: pointer;
+
+  font-family: "Golos Text";
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-white);
+}
+
+.arrow {
+  width: 22px;
+  height: 22px;
+  transform: rotate(90deg);
+}

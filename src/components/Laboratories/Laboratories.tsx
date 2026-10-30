@@ -11,7 +11,8 @@ import {
 } from "@/features/laboratories/queries";
 import { useCreateBooking } from "@/features/bookings/mutation";
 import { useSubscribe } from "@/features/subscriptions/mutations";
-// import { useBooking } from "@/features/bookings/queries";
+import LabelInput from "../SharedComponents/LabelInput";
+import RedButton from "@/components/SharedComponents/RedButton";
 
 const Laboratories = () => {
   const navigate = useNavigate();
@@ -173,34 +174,25 @@ const Laboratories = () => {
           </div>
           <div className={styles.calendarFormContainer}>
             <header className={styles.formHeader}>New booking</header>
-            <label className={styles.inputContainer}>
-              Date{" "}
-              <input
-                type="date"
-                value={dateValue}
-                onChange={(e) => setDateValue(e.target.value)}
-                className={styles.inputField}
-              />
-            </label>
+            <LabelInput
+              upperText="Date"
+              type="date"
+              value={dateValue}
+              setValue={setDateValue}
+            />
             <div className={styles.periodPickingContainer}>
-              <label className={styles.inputContainerPeriod}>
-                Beginning{" "}
-                <input
-                  type="time"
-                  value={beginning}
-                  onChange={(e) => setBeginning(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
-              <label className={styles.inputContainerPeriod}>
-                End{" "}
-                <input
-                  type="time"
-                  value={end}
-                  onChange={(e) => setEnd(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
+              <LabelInput
+                upperText="Beginning"
+                type="time"
+                value={beginning}
+                setValue={setBeginning}
+              />
+              <LabelInput
+                upperText="End"
+                type="time"
+                value={end}
+                setValue={setEnd}
+              />
             </div>
             <div className={styles.currentChoosenPeriod}>
               <p className={styles.currentChoosenPeriodText}>
@@ -214,30 +206,18 @@ const Laboratories = () => {
                 Reset
               </button>
             </div>
-            <label className={styles.inputContainer}>
-              Purpose{" "}
-              <textarea
-                value={purposeText}
-                onChange={(e) => setPurposeText(e.target.value)}
-                className={styles.textareaField}
-              />
-            </label>
-            <label className={styles.inputContainer}>
-              Note{" "}
-              <input
-                type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className={styles.inputField}
-              />
-            </label>
+            <LabelInput
+              upperText="Purpose"
+              isTextarea={true}
+              value={purposeText}
+              setValue={setPurposeText}
+            />
+            <LabelInput upperText="Note" value={note} setValue={setNote} />
             <p className={styles.postText}>Only you and admin can see it</p>
-            <button
-              className={styles.bookingButton}
-              onClick={handleCreateBooking}
-            >
-              Book <MoveUp className={styles.moveUp} />
-            </button>
+            <RedButton
+              buttonText="Book"
+              onClickFunction={handleCreateBooking}
+            />
           </div>
         </section>
       </div>
@@ -254,17 +234,11 @@ const Laboratories = () => {
             availability and make a reservation.
           </p>
         </div>
-        {/* <div className={styles.labHeaderContainerSearch}></div> */}
-        <label className={styles.inputContainer}>
-          Search by name, building, or equipment{" "}
-          <input
-            type="text"
-            value={searchValue}
-            placeholder="Spectrometer"
-            onChange={(e) => setSearchValue(e.target.value)}
-            className={styles.inputField}
-          />
-        </label>
+        <LabelInput
+          upperText="Search by name, building, or equipment"
+          value={searchValue}
+          setValue={setSearchValue}
+        />
       </section>
       <span className={styles.labStatistic}>
         <p>All: {labs.length}</p>

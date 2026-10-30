@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useNotificationRead } from "@/features/notifications/mutations";
 import { useExperiments } from "@/features/experiments/queries";
 import { formatDateTime } from "@/utils/utils";
+import RedButton from "@/components/SharedComponents/RedButton";
 
 const Overview = () => {
   const markRead = useNotificationRead();
@@ -41,12 +42,10 @@ const Overview = () => {
           >
             New experiment
           </button>
-          <button
-            className={commonStyles.redButtonWithArrow}
-            onClick={() => navigate("/laboratories")}
-          >
-            Book a laboratory <MoveUp className={commonStyles.redButtonArrow} />
-          </button>
+          <RedButton
+            buttonText="Book a laboratory"
+            onClickFunction={() => navigate("/laboratories")}
+          />
         </div>
       </section>
       <section className={styles.infoSectionContainer}>

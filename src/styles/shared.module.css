@@ -34,7 +34,7 @@
   transform: rotate(90deg);
 }
 
-.transparentButton {
+/* .transparentButton {
   width: fit-content;
   height: fit-content;
   background-color: transparent;
@@ -53,7 +53,7 @@
 
 .transparentButton:hover {
   background-color: var(--color-background);
-}
+} */
 
 .smallHeaderText {
   font-family: "Golos Text";

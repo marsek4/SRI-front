@@ -12,6 +12,8 @@ import { useSubscriptions } from "@/features/subscriptions/queries";
 import { useCreateReminder } from "@/features/reminders/mutations";
 import { useDeleteSubscription } from "@/features/subscriptions/mutations";
 import { formatDateTime } from "@/utils/utils";
+import TransparentButton from "@/components/SharedComponents/TransparentButton";
+import LabelSelect from "@/components/SharedComponents/LabelSelect";
 
 type NotificationType = "all" | "unread";
 
@@ -31,6 +33,12 @@ const Notifications = () => {
 
   const { notifications } = useNotifications();
   const { labs } = useLabs();
+  const labOptions = labs.map((lab) => {
+    return {
+      id: lab.id,
+      name: lab.name,
+    };
+  });
   const { subscriptions } = useSubscriptions();
   const subscribeToLab = useSubscribe();
 
@@ -38,7 +46,7 @@ const Notifications = () => {
     useState<NotificationType>("all");
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
-  const [remindAt, setRemindAt] = useState<string>();
+  const [remindAt, setRemindAt] = useState<string>("");
   const [selectedLab, setSelectedLab] = useState<string>("");
 
   const handleSubscribe = () => {
@@ -184,15 +192,11 @@ const Notifications = () => {
             setValue={setBody}
           />
 
-          <label className={styles.inputContainer}>
-            When to remind{" "}
-            <input
-              type="datetime-local"
-              value={remindAt}
-              onChange={(e) => setRemindAt(e.target.value)}
-              className={styles.inputField}
-            />
-          </label>
+          <LabelInput
+            upperText="When to remind"
+            value={remindAt}
+            setValue={setRemindAt}
+          />
           <button
             type="button"
             onClick={createNewReminder}
@@ -227,38 +231,25 @@ const Notifications = () => {
                   <p className={styles.subTopic}>{sub.topic}</p>
                 </div>
 
-                <button
-                  type="button"
-                  className={commonStyles.transparentButton}
-                  onClick={() => handleUnsubscribe(sub.id)}
-                >
-                  Unsubscribe
-                </button>
+                <TransparentButton
+                  buttonText="Unsubscribe"
+                  onClickFunction={() => handleUnsubscribe(sub.id)}
+                />
               </div>
             ))}
-            <label className={styles.selectContainer}>
-              Add subscription{" "}
-              <div className={styles.selectContainerButtons}>
-                <select
-                  className={styles.selectField}
-                  value={selectedLab}
-                  onChange={(e) => setSelectedLab(e.target.value)}
-                >
-                  <option>Choose a lab</option>
-                  {labs.map((lab) => (
-                    <option key={lab.id} value={lab.id}>
-                      {lab.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  className={commonStyles.transparentButton}
-                  onClick={handleSubscribe}
-                >
-                  Subscribe
-                </button>
-              </div>
-            </label>
+            <div className={styles.buttonsContainer}>
+              <LabelSelect
+                upperText="Add subscription"
+                variant="objects"
+                options={labOptions}
+                value={selectedLab}
+                setValue={setSelectedLab}
+              />
+              <TransparentButton
+                buttonText="Subscribe"
+                onClickFunction={handleSubscribe}
+              />
+            </div>
           </section>
         </section>
       </div>

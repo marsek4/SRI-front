@@ -1,8 +1,24 @@
 import styles from "./MyBookings.module.css";
 import commonStyles from "@/styles/shared.module.css";
-import { MoveUp } from "lucide-react";
+import RedButton from "@/components/SharedComponents/RedButton";
+import { useNavigate } from "react-router-dom";
+import { useBookings } from "@/features/bookings/queries";
+import Table from "@/components/SharedComponents/Table";
 
 const MyBookings = () => {
+  const navigate = useNavigate();
+  const { bookings } = useBookings();
+
+  const bookingsForTable = bookings.map((booking) => {
+    return {
+      time: { start: booking.startTime, end: booking.endTime },
+      laboratory: booking.labId, // надо сделать labName
+      purpose: booking.purpose,
+      access: booking.id,
+      status: booking.status,
+    };
+  });
+
   return (
     <div className={styles.myBookingsContainer}>
       <header className={styles.myBookingsHeader}>
@@ -12,10 +28,21 @@ const MyBookings = () => {
             Upcoming bookings can be cancelled before they end
           </p>
         </div>
-        <button type="button" className={commonStyles.redButtonWithArrow}>
-          New booking <MoveUp className={commonStyles.redButtonArrow} />
-        </button>
+        <RedButton
+          buttonText="New booking"
+          onClickFunction={() => navigate("/laboratories")}
+        />
       </header>
+      <section className={styles.myExpSection}>
+        {/* <p>{experiments.length} notes</p> */}
+        <p>{}</p>
+        <Table
+          headRow={["TIME", "LABORATORY", "PURPOSE", "ACCESS", "STATUS"]}
+          variant="bookings"
+          body={2}
+          // body={bookingsForTable}
+        />
+      </section>
     </div>
   );
 };

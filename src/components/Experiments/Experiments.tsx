@@ -1,9 +1,14 @@
 import styles from "./Experiments.module.css";
 import commonStyles from "@/styles/shared.module.css";
-import { MoveUp, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useExperiments } from "@/features/experiments/queries";
+import LabelInput from "@/components/SharedComponents/LabelInput";
+import LabelSelect from "../SharedComponents/LabelSelect";
+import RedButton from "@/components/SharedComponents/RedButton";
+import TransparentButton from "../SharedComponents/TransparentButton";
+import Table from "@/components/SharedComponents/Table";
 
 type SearchMode = "my" | "institute";
 
@@ -22,12 +27,20 @@ const Experiments = () => {
   const [tag, setTag] = useState<string>("");
   const [ownersLogin, setOwnersLogin] = useState<string>("");
   const [examples, setExamples] = useState<string>("");
+  const [visibility, setVisibility] = useState<string>("");
 
   const navigate = useNavigate();
   const { experiments } = useExperiments();
 
   const handleNewExperiment = () => {
     navigate("/experiments/new-experiment");
+  };
+
+  const resetInputs = () => {
+    setName("");
+    setTag("");
+    setOwnersLogin("");
+    setExamples("");
   };
 
   return (
@@ -40,13 +53,10 @@ const Experiments = () => {
             own
           </p>
         </div>
-        <button
-          type="button"
-          className={commonStyles.redButtonWithArrow}
-          onClick={handleNewExperiment}
-        >
-          New experiment <MoveUp className={commonStyles.redButtonArrow} />
-        </button>
+        <RedButton
+          buttonText="New experiment"
+          onClickFunction={handleNewExperiment}
+        />
       </header>
       <section className={styles.modePanel}>
         <span
@@ -67,110 +77,113 @@ const Experiments = () => {
           <section className={styles.myExpSection}>
             {/* <p>{experiments.length} notes</p> */}
             <p>{}</p>
-            <table className={styles.table}>
-              <thead className={styles.tableHead}>
-                <tr className={styles.tableHeadRow}>
-                  <th className={styles.tableHeadCell}>NAME</th>
-                  <th className={styles.tableHeadCell}>LABORATORY</th>
-                  <th className={styles.tableHeadCell}>STATUS</th>
-                  <th className={styles.tableHeadCell}>VISIBILITY</th>
-                  <th className={styles.tableHeadCell}>OWNER</th>
-                  <th className={styles.tableHeadCell}>SAMPLES</th>
-                  <th className={styles.tableHeadCell}>UPDATED AT</th>
+            <Table
+              headRow={[
+                "NAME",
+                "LABORATORY",
+                "STATUS",
+                "VISIBILITY",
+                "OWNER",
+                "SAMPLES",
+                "UPDATED AT",
+              ]}
+              variant="experiments"
+              body="q"
+            />
+            {/* <table className={commonStyles.table}>
+              <thead className={commonStyles.tableHead}>
+                <tr className={commonStyles.tableHeadRow}>
+                  <th className={commonStyles.tableHeadCell}>NAME</th>
+                  <th className={commonStyles.tableHeadCell}>LABORATORY</th>
+                  <th className={commonStyles.tableHeadCell}>STATUS</th>
+                  <th className={commonStyles.tableHeadCell}>VISIBILITY</th>
+                  <th className={commonStyles.tableHeadCell}>OWNER</th>
+                  <th className={commonStyles.tableHeadCell}>SAMPLES</th>
+                  <th className={commonStyles.tableHeadCell}>UPDATED AT</th>
                 </tr>
               </thead>
               <tbody>
                 {experiments.map((exp) => (
-                  <tr key={exp.id} className={styles.tableBodyRow}>
-                    <td className={styles.tableBodyCell}>{exp.title}</td>
-                    <td className={styles.tableBodyCell}>{exp.labId}</td>
-                    <td className={styles.tableBodyCell}>
+                  <tr key={exp.id} className={commonStyles.tableBodyRow}>
+                    <td className={commonStyles.tableBodyCell}>{exp.title}</td>
+                    <td className={commonStyles.tableBodyCell}>{exp.labId}</td>
+                    <td className={commonStyles.tableBodyCell}>
                       {getExperimentStatusLabel(exp.status)}
                     </td>
-                    <td className={styles.tableBodyCell}>{exp.visibility}</td>
-                    <td className={styles.tableBodyCell}>
+                    <td className={commonStyles.tableBodyCell}>
+                      {exp.visibility}
+                    </td>
+                    <td className={commonStyles.tableBodyCell}>
                       {exp.ownerUsername}
                     </td>
-                    <td className={styles.tableBodyCell}>{exp.sampleCount}</td>
-                    <td className={styles.tableBodyCell}>{exp.updatedAt}</td>
+                    <td className={commonStyles.tableBodyCell}>
+                      {exp.sampleCount}
+                    </td>
+                    <td className={commonStyles.tableBodyCell}>
+                      {exp.updatedAt}
+                    </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table> */}
           </section>
         ) : (
           <section className={styles.filterSection}>
             <div className={styles.inputRow}>
-              <label className={styles.inputContainer}>
-                Name begins with{" "}
-                <input
-                  type="text"
-                  value={name}
-                  placeholder="name"
-                  onChange={(e) => setName(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
+              <LabelInput
+                upperText="Name begins with"
+                value={name}
+                placeholder="name"
+                setValue={setName}
+              />
 
-              <label className={styles.inputContainer}>
-                Visibility{" "}
-                <select className={styles.inputField}>
-                  <option value="">Any</option>
-                  <option value="planned">Planned</option>
-                  <option value="progress">In progress</option>
-                  <option value="ended">Ended</option>
-                  <option value="failed">Failed</option>
-                </select>
-              </label>
+              <LabelSelect
+                upperText="Visibility"
+                variant="strings"
+                options={["Any", "Planned", "In progress", "Ended", "Failed"]}
+                value={visibility}
+                setValue={setVisibility}
+              />
 
-              <label className={styles.inputContainer}>
-                Laboratory{" "}
-                <select className={styles.inputField}>
-                  <option value="">Any</option>
-                  <option value="public">Public</option>
-                  <option value="private">Private</option>
-                </select>
-              </label>
+              {/* <LabelSelect
+                upperText="Laboratory"
+                variant="strings"
+                options={["Any", "Public", "Private"]}
+                value={}
+              /> */}
 
-              <label className={styles.inputContainer}>
-                Polymer{" "}
-                <input
-                  type="text"
-                  value={tag}
-                  placeholder="polymer"
-                  onChange={(e) => setTag(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
+              <LabelInput
+                upperText="Polymer"
+                placeholder="polymer"
+                value={tag}
+                setValue={setTag}
+              />
             </div>
             <div className={styles.inputRow}>
-              <label className={styles.inputContainer}>
-                Owner's login{" "}
-                <input
-                  type="text"
-                  value={ownersLogin}
-                  placeholder="login"
-                  onChange={(e) => setOwnersLogin(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
-              <label className={styles.inputContainer}>
-                No fewer than [number] examples{" "}
-                <input
-                  type="text"
-                  value={examples}
-                  placeholder="145"
-                  onChange={(e) => setExamples(e.target.value)}
-                  className={styles.inputField}
-                />
-              </label>
+              <LabelInput
+                upperText="Owners login"
+                value={ownersLogin}
+                placeholder="login"
+                setValue={setOwnersLogin}
+              />
+
+              <LabelInput
+                upperText="No fewer than [number] examples"
+                value={examples}
+                placeholder="name"
+                setValue={setExamples}
+              />
             </div>
             <div className={styles.inputRow}>
               <button className={styles.searchButton}>
                 <Search className={styles.searchIcon} />
                 Search
               </button>
-              <button className={styles.resetButton}>Reset</button>
+              {/* <button className={styles.resetButton}>Reset</button> */}
+              <TransparentButton
+                buttonText="Reset"
+                onClickFunction={resetInputs}
+              />
             </div>
           </section>
         )}
