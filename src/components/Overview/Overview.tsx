@@ -1,22 +1,21 @@
-import { MoveUp } from "lucide-react";
 import styles from "./Overview.module.css";
 import commonStyles from "@/styles/shared.module.css";
-// import { useNotifications } from "@/hooks/useNotifications";
 import { useNotifications } from "@/features/notifications/queries";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useNotificationRead } from "@/features/notifications/mutations";
 import { useExperiments } from "@/features/experiments/queries";
-import { formatDateTime } from "@/utils/utils";
+import { formatDateTime, formatDate, formatTime } from "@/utils/utils";
 import RedButton from "@/components/SharedComponents/RedButton";
+import { useBookings } from "@/features/bookings/queries";
 
 const Overview = () => {
   const markRead = useNotificationRead();
   const experiments = useExperiments();
+  const { notifications, isLoading, isError, error } = useNotifications();
+  const { bookings } = useBookings();
 
   const navigate = useNavigate();
-
-  const { notifications, isLoading, isError, error } = useNotifications();
 
   const unreadNotifications = notifications.filter(
     (notification) => notification.read === false,
@@ -59,6 +58,22 @@ const Overview = () => {
               All bookings
             </p>
           </header>
+          {bookings.map((booking) => (
+            <div className={styles.bookingContainer}>
+              <div className={styles.bookingTextContainer}>
+                <p className={styles.bookingUpperText}>
+                  {formatDate(booking.startTime)}
+                </p>
+                <p className={styles.bookingBottomTextTime}>
+                  {`${formatTime(booking.startTime)}-${formatTime(booking.endTime)}`}
+                </p>
+              </div>
+              <div className={styles.bookingTextContainer}>
+                <p className={styles.bookingUpperText}>{booking.labId}</p>
+                <p className={styles.bookingBottomText}>{booking.purpose}</p>
+              </div>
+            </div>
+          ))}
         </section>
         <section className={styles.infoSection}>
           <header className={styles.infoSectionHeader}>

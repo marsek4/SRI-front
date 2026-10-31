@@ -4,20 +4,24 @@ import RedButton from "@/components/SharedComponents/RedButton";
 import { useNavigate } from "react-router-dom";
 import { useBookings } from "@/features/bookings/queries";
 import Table from "@/components/SharedComponents/Table";
+import { useAuthStore } from "@/store/authStore";
 
 const MyBookings = () => {
+  const myUsername = useAuthStore.getState().user?.username;
   const navigate = useNavigate();
   const { bookings } = useBookings();
 
-  const bookingsForTable = bookings.map((booking) => {
-    return {
-      time: { start: booking.startTime, end: booking.endTime },
-      laboratory: booking.labId, // надо сделать labName
-      purpose: booking.purpose,
-      access: booking.id,
-      status: booking.status,
-    };
-  });
+  const bookingsForTable = bookings
+    .filter((booking) => booking.ownerUsername === myUsername)
+    .map((booking) => {
+      return {
+        time: { start: booking.startTime, end: booking.endTime },
+        laboratory: booking.labId, // надо сделать labName
+        purpose: booking.purpose,
+        access: booking.id,
+        status: booking.status,
+      };
+    });
 
   return (
     <div className={styles.myBookingsContainer}>
